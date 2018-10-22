@@ -14,7 +14,7 @@ RUN apt-get update \
 
 # send logs to stdout get webcore code. generate crt
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
-    && ln -sf /dev/stdout /var/log/apache2/error.log \
+    && ln -sf /dev/stderr /var/log/apache2/error.log \
     && git clone https://github.com/ajayjohn/webCoRE \
     && cd webCoRE \
     && git checkout hubitat-patches \
