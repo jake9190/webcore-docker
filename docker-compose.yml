@@ -1,0 +1,17 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+      args:
+        MY_CN: <servername>
+    restart: on-failure
+    ports:
+      - 443:443
+    environment:
+      - APACHE_RUN_USER=www-data
+      - APACHE_RUN_GROUP=www-data
+      - APACHE_LOG_DIR=/var/log/apache2
+      - APACHE_LOCK_DIR=/var/lock/apache2
+      - MY_CN=<servername>
+

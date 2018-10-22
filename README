@@ -1,0 +1,7 @@
+Edit the docker-compose.yml Change the two MY_CN instances
+to the FQDN or servername you want your instance to have.
+
+docker-compose up -d
+
+Your crt will be self-signed, so most browsers will complain a bit,
+but hubitat doesn't seem to mind.
