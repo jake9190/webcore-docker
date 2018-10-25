@@ -4,8 +4,8 @@ services:
     build:
       context: .
       args:
-        MY_CN: <servername>
-    restart: on-failure
+        MY_CN: webcore
+    restart: always
     ports:
       - 443:443
     environment:
@@ -13,5 +13,5 @@ services:
       - APACHE_RUN_GROUP=www-data
       - APACHE_LOG_DIR=/var/log/apache2
       - APACHE_LOCK_DIR=/var/lock/apache2
-      - MY_CN=<servername>
+      - MY_CN=webcore
 
