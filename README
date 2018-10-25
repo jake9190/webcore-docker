@@ -1,5 +1,10 @@
 Edit the docker-compose.yml Change the two MY_CN instances
-to the FQDN or servername you want your instance to have.
+from "webcore" to the FQDN or servername you want your instance to have,
+or just leave it at "webcore". Either way you should then need to add an entry in
+your local /etc/hosts mapping this name to the ip of your docker host.
+
+You can also edit the locale in the openssl command in the Dockerfile. Nothing
+will break if you don't, but the locale of your crt will say "Portland, OR".
 
 docker-compose up -d
 
