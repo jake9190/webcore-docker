@@ -1,5 +1,5 @@
 FROM ubuntu:latest
-MAINTAINER Bill McGair bill@mcgair.com
+MAINTAINER Richard Brown
 
 ARG MY_CN
 WORKDIR /var/www
@@ -15,7 +15,7 @@ RUN apt-get update \
 # send logs to stdout get webcore code. generate crt
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
     && ln -sf /dev/stdout /var/log/apache2/error.log \
-    && git clone https://github.com/ajayjohn/webCoRE \
+    && git clone https://github.com/ady624/webCoRE \
     && cd webCoRE \
     && git checkout hubitat-patches \
     && cd ../ \
