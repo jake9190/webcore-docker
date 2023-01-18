@@ -1,3 +1,4 @@
+blah blah
 Edit the docker-compose.yml Change the two MY_CN instances
 from "webcore" to the FQDN or servername you want your instance to have,
 or just leave it at "webcore". You can also edit the locale in the openssl
