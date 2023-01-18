@@ -5,7 +5,7 @@ services:
       context: .
       args:
         MY_CN: webcore
-    image: bmcgair/webcore-docker
+    image: arzachena/webcore
     restart: always
     ports:
       - 443:443
