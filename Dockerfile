@@ -21,8 +21,8 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log \
 #    && cd ../ \
     && ln -s webCoRE/dashboard webcore \
     && mkdir -p /etc/apache2/ssl \
-    && openssl req -new -newkey rsa:2048 -days 9999 -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=Dis/CN=$MY_CN" -keyout /etc/apache2/ssl/$MY_CN.key  -out /etc/apache2/ssl/$MY_CN.crt"
-# removed -addext "subjectAltName = DNS:first.domain-name.com
+    && openssl req -new -newkey rsa:2048 -days 9999 -nodes -x509 -subj "/C=US/ST=Oregon/L=Portland/O=Dis/CN=$MY_CN" -keyout /etc/apache2/ssl/$MY_CN.key  -out /etc/apache2/ssl/$MY_CN.crt
+# removed -addext "subjectAltName = DNS:first.domain-name.com"
 # add apache conf
 COPY webcore-apache.conf /etc/apache2/sites-enabled/000-default.conf
 
