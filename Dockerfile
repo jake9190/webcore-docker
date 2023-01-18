@@ -13,9 +13,9 @@ RUN apt-get update \
     && a2enmod ssl 
 
 # send logs to stdout get webcore code. generate crt
-RUN ln -sf /dev/stdout /var/log/apache2/access.log 
-#    && ln -sf /dev/stdout /var/log/apache2/error.log \
-#    && git clone https://github.com/ady624/webCoRE \
+RUN ln -sf /dev/stdout /var/log/apache2/access.log \
+    && ln -sf /dev/stdout /var/log/apache2/error.log \
+    && git clone https://github.com/ady624/webCoRE 
 #    && cd webCoRE \
 #    && git checkout hubitat-patches \
 #    && cd ../ \
