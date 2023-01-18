@@ -15,9 +15,9 @@ RUN apt-get update \
 # send logs to stdout get webcore code. generate crt
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
     && ln -sf /dev/stdout /var/log/apache2/error.log \
-    && git clone https://github.com/ady624/webCoRE 
-#    && cd webCoRE \
-#    && git checkout hubitat-patches \
+    && git clone https://github.com/ady624/webCoRE \
+    && cd webCoRE \
+    && git checkout hubitat-patches
 #    && cd ../ \
 #    && ln -s webCoRE/dashboard webcore \
 #    && mkdir -p /etc/apache2/ssl \
