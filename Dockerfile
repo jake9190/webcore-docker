@@ -8,7 +8,7 @@ WORKDIR /var/www
 RUN apt-get update \
     && apt-get -y upgrade
 # Install and run apache
-RUN apt-get install -y apache2 && apt-get clean \
+RUN apt-get install -y apache2 git && apt-get clean \
     && a2enmod rewrite \
     && a2enmod ssl 
 
