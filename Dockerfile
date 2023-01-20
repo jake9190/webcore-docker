@@ -5,7 +5,7 @@ ARG MY_CN
 WORKDIR /var/www
 
 # Update the repository sources list
-RUN apt-get update
+RUN apt-get update \
     && apt-get -y upgrade
 # Install and run apache
 RUN apt-get install -y apache2 && apt-get clean \
