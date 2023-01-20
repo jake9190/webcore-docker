@@ -20,7 +20,7 @@ RUN openssl req -new -newkey rsa:2048 -days 9999 -nodes -x509 -subj "/C=US/ST=Or
 # removed -addext "subjectAltName = DNS:first.domain-name.com"
 # add apache conf
 COPY webcore-apache.conf /etc/apache2/sites-enabled/000-default.conf
-ENV APACHE_LOG_DIR /var/log/apache2
+VOLUME /var/log/apache2
 EXPOSE 443
 
 # By default, simply start apache.
