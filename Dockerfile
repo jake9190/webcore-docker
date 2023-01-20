@@ -6,9 +6,10 @@ WORKDIR /var/www
 
 # Update the repository sources list
 RUN apt-get update
-
 # Install and run apache
-RUN apt-get install -y apache2 && apt-get clean
+RUN apt-get install -y apache2 && apt-get clean \
+   && a2enmod rewrite \
+   && a2enmod ssl 
 
 # send logs to stdout get webcore code. generate crt
 RUN git clone https://github.com/ady624/webCoRE \
