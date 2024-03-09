@@ -1,18 +1,21 @@
 version: '3'
 services:
-  app:
+  webcore-dashboard:
+    container_name: webcore-dashboard
     build:
       context: .
+      dockerfile: Dockerfile
       args:
         MY_CN: webcore
-    image: arzachena/webcore
+#    image: arzachena/webcore
     restart: always
     ports:
-      - 443:443
+      - 8090:80
+    volumes:
+      - $HOME/docker/webcore/apache.conf:/etc/apache2/sites-enabled/000-default.conf:ro
     environment:
       - APACHE_RUN_USER=www-data
       - APACHE_RUN_GROUP=www-data
       - APACHE_LOG_DIR=/var/log/apache2
       - APACHE_LOCK_DIR=/var/lock/apache2
       - MY_CN=webcore
-
