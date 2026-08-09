@@ -82,6 +82,24 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 			return;
 		}
 
+		// The instance URL you register with is authoritative for the endpoint:
+		// derive its base (scheme://host[:port]) and use that as the local
+		// endpoint, overriding any previously saved one (e.g. a stale http LAN
+		// IP that would trigger mixed-content blocking when the dashboard is
+		// served over HTTPS). For a Hubitat *cloud* URL there is no local base
+		// to set, so clear any override and let the cloud endpoint be used as-is.
+		try {
+			var originMatch = uri.match(/^(https?:\/\/[^\/]+)/i);
+			var origin = originMatch ? originMatch[1] : '';
+			var host = origin.replace(/^https?:\/\//i, '').replace(/:\d+$/, '');
+			if (origin && !/(^|\.)hubitat\.com$/i.test(host)) {
+				window.localStorage.setItem('webcore:localApiBase', origin);
+			} else {
+				window.localStorage.removeItem('webcore:localApiBase');
+			}
+			if (typeof getLocalApiBase === 'function') $scope.localEndpoint.base = getLocalApiBase();
+		} catch (e) {}
+
 		$scope.loading = true;
 		app.initialInstanceUri = uri;
 		$location.path('/');
