@@ -271,9 +271,6 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 	}
 
 	$scope.showSettings = function() {
-		if (navigator.geolocation) {
-		    navigator.geolocation.getCurrentPosition($scope.updateLocation);
-		}
 		$scope.checkPresenceSensor();
 		$scope.closeNavBar();
 		$scope.settings = $scope.copy($scope.instance.settings);
@@ -1310,10 +1307,6 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 	dataService.whenReady().then(function() {
 		$scope.init();
 	});
-
-	if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition($scope.updateLocation);
-	}
 
 }]);
 

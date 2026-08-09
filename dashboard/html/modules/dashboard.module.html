@@ -277,27 +277,6 @@
 <div class="tab-pane active form-horizontal" id="places">
 	<div ng-repeat="place in settings.places" class="place" ng-click="editPlace(place)">
 	    <footer><i ng-if="!!place.h" class="fa fa-home"></i>{{place.n}}</footer>
-	    <ng-map center="{{place.p}}" zoom="14" mayTypeId="TERRAIN" controls="false" disable-default-u-i="true" pan-control="false" zoom-control="false" scale-control="false">
-	    <marker position="{{place.p}}" draggable="false"></marker>
-	    <shape name="circle" editable="false" draggable="false"
-	      stroke-color="#00CCFF"
-	      stroke-opacity="0.8"
-	      stroke-weight="2"
-	      fill-color="#00CCFF"
-	      fill-opacity="0.35"
-	      center="{{place.p}}"
-	      radius="{{place.i}}">
-	    </shape>
-	    <shape name="circle" editable="false" draggable="false"
-	      stroke-color="#CCC"
-	      stroke-opacity="0.8"
-	      stroke-weight="2"
-	      fill-color="#CCC"
-	      fill-opacity="0.35"
-	      center="{{place.p}}"
-	      radius="{{place.o}}">
-	    </shape>
-	  </ng-map>
 	</div><div ng-if="!!settings.places.length && isAppHosted && !presenceSensorId" class="place device" ng-click="registerPresenceSensor()"><i class="fas fa-map-marker-alt"></i><footer>Setup sensor</footer></div><div ng-if="settings.places.length < 10" class="place new" ng-click="addPlace()"></div>
 </div>
 
@@ -703,27 +682,6 @@
 </form>
 <form>
     <label>Drag the marker to the center of the location and adjust the inner circle and outer circle to adjust sensitivity. Inner circle needs to be entered to arrive at a place, while the outer circle needs to be exited to leave a place</label>
-    <ng-map ng-if="designer.showMap" center="{{designer.position}}" zoom="16" mayTypeId="TERRAIN" on-click="movePlace()">
-        <marker position="{{designer.position}}" title="{{designer.name}}" draggable="true" on-dragend="movePlace()"></marker>
-        <shape name="circle" editable="true" draggable="false" on-center_changed="movePlace('i')" on-radius_changed="movePlace('i')"
-          stroke-color="#00CCFF"
-          stroke-opacity="0.8"
-          stroke-weight="2"
-          fill-color="#00CCFF"
-          fill-opacity="0.35"
-          center="{{designer.position}}"
-          radius="{{designer.inner}}">
-        </shape>
-        <shape name="circle" editable="true" draggable="false" on-center_changed="movePlace('o')" on-radius_changed="movePlace('o')"
-          stroke-color="#CCC"
-          stroke-opacity="0.8"
-          stroke-weight="2"
-          fill-color="#CCC"
-          fill-opacity="0.35"
-          center="{{designer.position}}"
-          radius="{{designer.outer}}">
-        </shape>
-    </ng-map>
     <div class="form-control-static text-center">
 	Location is at {{designer.position[0].toFixed(6)}}°, {{designer.position[1].toFixed(6)}}°, arriving radius of {{designer.inner.toFixed(0)}}m, leaving radius of {{designer.outer.toFixed(0)}}m
     </div>
