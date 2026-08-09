@@ -42,6 +42,18 @@ function rewriteToLocalApi(url) {
 	return base.replace(/\/+$/, '') + '/apps/api/' + m[1] + '/' + m[2];
 }
 
+// Forces the origin (scheme://host[:port]) of an absolute endpoint URL to the
+// configured local base, keeping the path/query. The hub reports its own local
+// endpoint (e.g. http://192.168.1.xxx/apps/api/7/) in the dashboard/load
+// response; when a local base is configured we replace that origin so the
+// dashboard keeps talking to the endpoint the user specified (e.g. an https
+// reverse proxy) instead of the hub's self-reported http LAN address.
+function applyLocalApiBase(uri) {
+	var base = getLocalApiBase();
+	if (!base || (typeof uri !== 'string') || !/^https?:\/\//i.test(uri)) return uri;
+	return uri.replace(/^https?:\/\/[^\/]+/i, base.replace(/\/+$/, ''));
+}
+
 
 app.directive('head', ['$rootScope', '$compile',
     function ($rootScope, $compile) {
@@ -706,7 +718,10 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		var si = store[inst.id];
 		if (!si) si = {};
 		si.token = inst.token ? inst.token : si.token;
-		si.uri = inst.uri ? inst.uri.replace(':443', '') : si.uri;
+		// The hub reports its own local endpoint in inst.uri; force it back to
+		// the user-specified local base (if any) so we don't switch to the hub's
+		// self-reported http LAN address.
+		si.uri = inst.uri ? applyLocalApiBase(inst.uri.replace(':443', '')) : si.uri;
 		store[inst.id] = fixSI(si);
 	}
 
