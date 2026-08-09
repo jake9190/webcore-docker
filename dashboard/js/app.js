@@ -2405,12 +2405,10 @@ if (document.selection) {
 }}
 
 function loadFontAwesomeFallback() {
+  // FontAwesome is vendored locally (free webfonts) via index.html, so there is
+  // nothing external to load - just flag that Pro icons are unavailable so the
+  // .far/.fal directives map to the free solid set.
   fontAwesomePro = false;
-  var shim = $('head script[src*="pro.fontawesome"]').remove().clone().removeAttr('onerror');
-  var faFreeSrc = shim.attr('src').replace('pro', 'use');
-  shim.attr('src', faFreeSrc);
-  shim.clone().attr('src', faFreeSrc.replace('v4-shims', 'all')).appendTo('head');
-  shim.appendTo('head');
 }
 
 // Handle Pro load failure before app loads

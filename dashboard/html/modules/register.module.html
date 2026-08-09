@@ -12,19 +12,19 @@
 					<span class="input-group-btn">
 						<button type="submit" ng-disabled="code.length != 4" class="btn btn-primary"><span class="fa fa-chevron-right"></span></button>
 					</span>
-				</div><br />
+				</div>
 				<p class="text-center"><a ng-if="hasRegistered" ng-click="cancel()" class="btn btn-secondary">Cancel</a></p>
 			</form>
 		</div>
 		<div id="instanceLogin">
-			<p class="text-center">
+			<p class="text-center advanced-toggle">
 				<a ng-click="toggleInstanceLogin()" class="btn btn-link btn-sm">
 					<span class="fa" ng-class="showInstanceLogin ? 'fa-chevron-down' : 'fa-chevron-right'"></span>
 					Advanced: log in with an instance URL
 				</a>
 			</p>
 			<div ng-if="showInstanceLogin">
-				<p class="text-muted" style="font-size: 0.9em;">
+				<p class="text-muted advanced-help">
 					Connect directly to a Hubitat instance without a registration
 					code. Paste the webCoRE dashboard endpoint URL for your instance
 					(it ends with <code>?access_token=…</code>), or paste your
@@ -40,14 +40,14 @@
 			</div>
 		</div>
 		<div id="localEndpoint">
-			<p class="text-center">
+			<p class="text-center advanced-toggle">
 				<a ng-click="toggleLocalEndpoint()" class="btn btn-link btn-sm">
 					<span class="fa" ng-class="showLocalEndpoint ? 'fa-chevron-down' : 'fa-chevron-right'"></span>
 					Advanced: local endpoint
 				</a>
 			</p>
 			<div ng-if="showLocalEndpoint">
-				<p class="text-muted" style="font-size: 0.9em;">
+				<p class="text-muted advanced-help">
 					Optional. Route dashboard API traffic directly to your hub or a
 					local reverse proxy instead of the Hubitat cloud. Enter the base
 					URL only (no path), e.g. <code>https://hubitat.domain.com</code>
@@ -63,8 +63,6 @@
 			</div>
 		</div>
 	  <div class="help-row">
-	      <a href="https://www.paypal.me/ady624" class="btn btn-primary"><i class="fab fa-paypal"></i>
-	        Donate</a>
 	      <a href="https://wiki.webcore.co/" class="btn btn-primary"><i class="fa fa-book"></i>
 	        Wiki</a>
 	      <a href="https://community.webcore.co/" class="btn btn-primary"><i class="fa fa-comments"></i>

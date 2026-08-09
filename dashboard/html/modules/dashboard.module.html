@@ -211,9 +211,9 @@
 <ul  class="nav nav-pills">
 <li class="active"><a data-target="#places" data-toggle="tab">Places</a>
     </li>
-<!--	    <li class="">
+    <li>
       <a data-target="#general" data-toggle="tab">General</a>
-    </li>-->
+    </li>
     <li><a data-target="#categories" data-toggle="tab">Categories</a>
     </li>
     <li><a data-target="#integrations" data-toggle="tab">Integrations</a>
@@ -224,7 +224,18 @@
 
     <div class="tab-content clearfix">
       <div class="tab-pane" id="general">
-	Nothing here yet.
+			<panel name="Local endpoint override">
+				<p>Route dashboard API traffic directly to your hub or a local reverse proxy instead of the Hubitat cloud. Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code>. Leave blank to use the cloud / registered endpoint.</p>
+				<div class="form-group row">
+					<label class="control-label col-sm-3">Local API base URL</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" ng-model="localApiBase" placeholder="https://hubitat.domain.com"/>
+					</div>
+				</div>
+				<div class="text-right">
+					<button class="btn btn-info" ng-click="saveLocalApiBase()">Save local endpoint</button>
+				</div>
+			</panel>
 	</div>
 	<div class="tab-pane" id="categories">
 

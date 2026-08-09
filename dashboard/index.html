@@ -27,24 +27,18 @@
     <meta name="msapplication-TileColor" content="#603cba">
     <meta name="msapplication-config" content="img/favicon/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-    <!--Font Awesome config-->
-    <script type="text/javascript">
-        if (window.fontAwesomePro === undefined) {
-          fontAwesomePro = true;
-          FontAwesomeConfig = { autoReplaceSvg: 'nest' };
-          function loadFontAwesomeFallback() { fontAwesomePro = false }
-        }
-    </script>
+    <!--Font Awesome (vendored locally, free webfonts - no external CDN)-->
+    <script type="text/javascript">window.fontAwesomePro = false;</script>
 		<!--dashboard components-->
 		<link rel="stylesheet" href="css/components/components.min.css" charset="utf-8" media="none" onload="if(media!='all')media='all'"/>
+		<link rel="stylesheet" href="css/fontawesome/all.min.css" charset="utf-8"/>
+		<link rel="stylesheet" href="css/fontawesome/v4-shims.min.css" charset="utf-8"/>
 		<link rel="stylesheet" href="css/app.css" charset="utf-8"/><!--dev-->
 		<script type="text/javascript" src="js/components/components.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="js/app.js" charset="utf-8"></script><!--dev-->
 		<script type="text/javascript" src="js/modules/register.module.js" charset="utf-8"></script><!--dev-->
 		<script type="text/javascript" src="js/modules/dashboard.module.js" charset="utf-8"></script><!--dev-->
 		<script type="text/javascript" src="js/modules/piston.module.js" charset="utf-8"></script><!--dev-->
-		<script defer src="https://kit.fontawesome.com/a00a53f405.js" crossorigin="anonymous" onerror="loadFontAwesomeFallback()"></script>
-		<script defer src="https://pro.fontawesome.com/releases/v5.11.1/js/v4-shims.js" crossorigin="anonymous"></script>
     </head>
 	<body data-theme="{{ theme }}">
 		<!--facebook--><!--<div id="fb-root"></div><script>(function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(d.getElementById(id))return;js=d.createElement(s);js.id=id;js.async=true;js.src="//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.9";fjs.parentNode.insertBefore(js,fjs);}(document,'script','facebook-jssdk'));</script>-->

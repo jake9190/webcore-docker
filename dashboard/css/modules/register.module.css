@@ -11,10 +11,6 @@ body {
 	margin: 0 auto;
 }
 
-.loginbox-logo {
-	max-width: 100%;
-}
-
 .loginbox .input-group .form-control,
 .loginbox .input-group .btn {
 	border-radius: 0 !important;
@@ -29,14 +25,68 @@ ng-view {
 	position: relative;
 }
 
-#instance, 
-.loginbox .input-group, 
-.help-row {
-	margin-top: 40px;
+/* ---- Consistent vertical rhythm ---------------------------------------- */
+
+.loginbox-logo {
+	max-width: 100%;
+	margin-bottom: 8px;
 }
 
+/* Registration block sits a comfortable distance below the logo. */
+#instance {
+	margin-top: 30px;
+}
 
-.help-row{
+/* All inputs share the same spacing above them. */
+.loginbox .input-group {
+	margin-top: 16px;
+}
+
+.loginbox p {
+	margin-bottom: 10px;
+}
+
+/* ---- Advanced (collapsible) sections ----------------------------------- */
+
+#instanceLogin,
+#localEndpoint {
+	margin-top: 20px;
+	padding-top: 16px;
+	border-top: 1px solid rgba(127, 127, 127, 0.2);
+}
+
+.advanced-toggle {
+	margin-bottom: 0;
+}
+
+.advanced-toggle .btn-link {
+	color: #8a9199;
+	text-decoration: none;
+	font-size: 0.9em;
+	white-space: normal;
+}
+
+.advanced-toggle .btn-link:hover,
+.advanced-toggle .btn-link:focus {
+	color: #b7bdc4;
+	text-decoration: none;
+}
+
+.advanced-toggle .fa {
+	margin-right: 6px;
+}
+
+.advanced-help {
+	font-size: 0.85em;
+	line-height: 1.45;
+	margin-top: 10px;
+	margin-bottom: 0;
+}
+
+/* ---- Help links row ---------------------------------------------------- */
+
+.help-row {
+	margin-top: 40px;
 	text-align: center;
 }
 
