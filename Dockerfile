@@ -1,28 +1,18 @@
-FROM ubuntu:latest
-MAINTAINER Richard Brown
+FROM httpd:2.4-alpine
 
-ARG MY_CN
-WORKDIR /var/www
+# Serve the local (unminified) dashboard/ folder straight from the build context.
+COPY dashboard/ /var/www/webcore/
+COPY webcore-apache.conf /usr/local/apache2/conf/webcore.conf
 
-# Update the repository sources list
-RUN apt-get update \
-    && apt-get -y upgrade
-# Install and run apache
-RUN apt-get install -y apache2 git && apt-get clean \
-    && a2enmod rewrite \
-    && a2enmod ssl \
-    && a2enmod lbmethod_byrequests
+# Enable the modules the dashboard needs:
+#   rewrite    -> dashboard/.htaccess HTML5-mode deep-link fallback
+#   proxy/http -> optional same-origin reverse proxy to the local hub
+# then include our vhost config from the main httpd.conf.
+RUN sed -i \
+      -e 's|^#\(LoadModule rewrite_module .*\)|\1|' \
+      -e 's|^#\(LoadModule proxy_module .*\)|\1|' \
+      -e 's|^#\(LoadModule proxy_http_module .*\)|\1|' \
+      conf/httpd.conf \
+    && printf '\nInclude conf/webcore.conf\n' >> conf/httpd.conf
 
-# send logs to stdout get webcore code. generate crt
-RUN git clone https://github.com/ady624/webCoRE
-RUN ln -s webCoRE/dashboard webcore
-#RUN mkdir -p /etc/apache2/ssl
-#RUN openssl req -new -newkey rsa:2048 -days 9999 -nodes -x509 -subj "/C=US/ST=New York/L=New York/O=Dis/CN=$MY_CN" -keyout /etc/apache2/ssl/$MY_CN.key  -out /etc/apache2/ssl/$MY_CN.crt
-# removed -addext "subjectAltName = DNS:first.domain-name.com"
-# add apache conf
-#COPY webcore-apache.conf /etc/apache2/sites-enabled/000-default.conf
-VOLUME /var/log/apache2
-EXPOSE 443
-
-# By default, simply start apache.
-CMD /usr/sbin/apache2ctl -D FOREGROUND
+EXPOSE 80

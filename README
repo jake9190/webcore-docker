@@ -1,16 +1,31 @@
-blah blah
-Edit the docker-compose.yml Change the two MY_CN instances
-from "webcore" to the FQDN or servername you want your instance to have,
-or just leave it at "webcore". You can also edit the locale in the openssl
-command in the Dockerfile. Nothing will break if you don't, but the locale
-of your crt will say "Portland, OR".
-docker-compose up -d
+webCoRE dashboard - Docker
+==========================
 
-OR 
+This builds a small Apache (httpd:2.4-alpine) container that serves the local
+dashboard/ folder in this repo. Everything is baked into the image at build
+time - there are no external files or host volumes to set up, so a fresh clone
+builds and runs as-is.
 
-docker build --build-arg MY_CN=webcore .
-docker run bmcgair/webcore-docker:latest
+Quick start
+-----------
+    docker compose up -d --build
 
-In both cases your crt will be self-signed, so most browsers will complain a bit,
-but hubitat doesn't seem to mind, and traffic to the WebCoRE instance 
-will still be encrypted.
+Then open http://localhost:8090
+
+The dashboard is an AngularJS HTML5-mode single-page app served from the site
+root. Deep links / refreshes are handled by dashboard/.htaccess (mod_rewrite),
+which is enabled in the Dockerfile.
+
+Without docker compose
+----------------------
+    docker build -t webcore-dashboard .
+    docker run -d -p 8090:80 webcore-dashboard
+
+Notes
+-----
+- The container serves plain HTTP on port 80 (published as 8090 on the host).
+  TLS is expected to be terminated upstream by a reverse proxy / load balancer.
+- To proxy your local hub's API through this origin (same-origin, no CORS),
+  edit webcore-apache.conf and uncomment / adjust the ProxyPass lines, then
+  rebuild.
+

@@ -1,0 +1,105 @@
+<status ng-if="status" ng-animate ng-bind-html="status" ng-click="setStatus()"></status>
+
+<div class="container">
+	<div class="loginbox">
+		<img class="loginbox-logo" src="img/webCoRE-text-{{ theme }}.svg">
+	  <div id="instance">
+			<form ng-submit="register()">
+				<p>Enter your registration code from the webCoRE SmartApp to get started.</p>
+				<p><a target="_blank" href="https://wiki.webcore.co/#Opening_the_new_dashboard_from_your_phone">Need help finding your registration code?</a></p>
+				<div class="input-group input-group-lg">
+					<input name="code" class="form-control " type="text" maxlength="4" ng-model="code" />
+					<span class="input-group-btn">
+						<button type="submit" ng-disabled="code.length != 4" class="btn btn-primary"><span class="fa fa-chevron-right"></span></button>
+					</span>
+				</div><br />
+				<p class="text-center"><a ng-if="hasRegistered" ng-click="cancel()" class="btn btn-secondary">Cancel</a></p>
+			</form>
+		</div>
+		<div id="instanceLogin">
+			<p class="text-center">
+				<a ng-click="toggleInstanceLogin()" class="btn btn-link btn-sm">
+					<span class="fa" ng-class="showInstanceLogin ? 'fa-chevron-down' : 'fa-chevron-right'"></span>
+					Advanced: log in with an instance URL
+				</a>
+			</p>
+			<div ng-if="showInstanceLogin">
+				<p class="text-muted" style="font-size: 0.9em;">
+					Connect directly to a Hubitat instance without a registration
+					code. Paste the webCoRE dashboard endpoint URL for your instance
+					(it ends with <code>?access_token=…</code>), or paste your
+					dashboard init link.
+				</p>
+				<div class="input-group input-group-lg">
+					<input name="instanceUri" class="form-control" type="text"
+						placeholder="https://cloud.hubitat.com/api/…/apps/…/?access_token=…" ng-model="instanceUri" />
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" ng-disabled="!instanceUri" ng-click="loginWithInstance()">Log in</button>
+					</span>
+				</div>
+			</div>
+		</div>
+		<div id="localEndpoint">
+			<p class="text-center">
+				<a ng-click="toggleLocalEndpoint()" class="btn btn-link btn-sm">
+					<span class="fa" ng-class="showLocalEndpoint ? 'fa-chevron-down' : 'fa-chevron-right'"></span>
+					Advanced: local endpoint
+				</a>
+			</p>
+			<div ng-if="showLocalEndpoint">
+				<p class="text-muted" style="font-size: 0.9em;">
+					Optional. Route dashboard API traffic directly to your hub or a
+					local reverse proxy instead of the Hubitat cloud. Enter the base
+					URL only (no path), e.g. <code>https://hubitat.domain.com</code>
+					or <code>http://192.168.1.20</code>. Leave blank to use the cloud.
+				</p>
+				<div class="input-group input-group-lg">
+					<input name="localApiBase" class="form-control" type="text"
+						placeholder="https://hubitat.domain.com" ng-model="localApiBase" />
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-primary" ng-click="saveLocalApiBase()">Save</button>
+					</span>
+				</div>
+			</div>
+		</div>
+	  <div class="help-row">
+	      <a href="https://www.paypal.me/ady624" class="btn btn-primary"><i class="fab fa-paypal"></i>
+	        Donate</a>
+	      <a href="https://wiki.webcore.co/" class="btn btn-primary"><i class="fa fa-book"></i>
+	        Wiki</a>
+	      <a href="https://community.webcore.co/" class="btn btn-primary"><i class="fa fa-comments"></i>
+	        Forum</a>
+	    </div>
+		</div>
+</div>
+
+
+
+<!-- ACCOUNTS NOT CURRENTLY ACTIVE
+<ul  class="nav nav-pills">
+	<div login>
+			<li class="active"><a data-target="#instance" data-toggle="tab">Register Instance</a>
+	    </li>
+	    <li><a data-target="#account" data-toggle="tab">Login</a>
+	    </li>
+</ul>
+<div class="tab-pane" id="account">
+  <panel>
+	  <div class="form-group">
+		  <p>Accounts are not currently enabled.</p>
+		  <p>You do not need an account to use webCoRE. Please register an instance.</p>
+	  </div>
+	  <div class="form-group">
+		  <label>Username</label>
+		  <input login class="form-control" type="text" ng-model="username" disabled/>
+	  </div>
+	  <div class="form-group">
+		  <label>Password</label>
+		    <input login class="form-control" type="password" ng-model="password" disabled/>
+	  </div>
+	  <div class="form-group">
+		  <button class="btn btn-info" ng-disabled="(username.length < 4) || (password.length < 8)" ng-click="setStatus('Sorry, account log in is not yet available');">Log in</button>
+	  </div>
+  </panel>
+</div>
+-->
