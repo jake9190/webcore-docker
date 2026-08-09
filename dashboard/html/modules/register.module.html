@@ -32,9 +32,9 @@
 				</p>
 				<div class="input-group input-group-lg">
 					<input name="instanceUri" class="form-control" type="text"
-						placeholder="https://cloud.hubitat.com/api/…/apps/…/?access_token=…" ng-model="instanceUri" />
+						placeholder="https://cloud.hubitat.com/api/…/apps/…/?access_token=…" ng-model="instanceLogin.uri" />
 					<span class="input-group-btn">
-						<button type="button" class="btn btn-primary" ng-disabled="!instanceUri" ng-click="loginWithInstance()">Log in</button>
+						<button type="button" class="btn btn-primary" ng-disabled="!instanceLogin.uri" ng-click="loginWithInstance()">Log in</button>
 					</span>
 				</div>
 			</div>
@@ -55,7 +55,7 @@
 				</p>
 				<div class="input-group input-group-lg">
 					<input name="localApiBase" class="form-control" type="text"
-						placeholder="https://hubitat.domain.com" ng-model="localApiBase" />
+						placeholder="https://hubitat.domain.com" ng-model="localEndpoint.base" />
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-primary" ng-click="saveLocalApiBase()">Save</button>
 					</span>

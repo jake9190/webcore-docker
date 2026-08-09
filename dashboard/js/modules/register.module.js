@@ -7,14 +7,16 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 	// Local endpoint override: route dashboard API traffic to a local hub /
 	// reverse proxy instead of the Hubitat cloud. Persisted in localStorage.
 	$scope.showLocalEndpoint = false;
-	$scope.localApiBase = getLocalApiBase();
+	// Bound via an object so the input inside ng-if resolves to this same model
+	// (ng-if creates a child scope; primitives on $scope would not two-way bind).
+	$scope.localEndpoint = { base: getLocalApiBase() };
 
 	$scope.toggleLocalEndpoint = function() {
 		$scope.showLocalEndpoint = !$scope.showLocalEndpoint;
 	};
 
 	$scope.saveLocalApiBase = function() {
-		var v = ($scope.localApiBase || '').trim().replace(/\/+$/, '');
+		var v = ($scope.localEndpoint.base || '').trim().replace(/\/+$/, '');
 		if (v && !/^https?:\/\//i.test(v)) {
 			$scope.setStatus('Local endpoint must start with http:// or https://');
 			return;
@@ -27,7 +29,7 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 				window.localStorage.removeItem('webcore:localApiBase');
 				$scope.setStatus('Local endpoint cleared; using the cloud endpoint.');
 			}
-			$scope.localApiBase = v;
+			$scope.localEndpoint.base = v;
 		} catch (e) {
 			$scope.setStatus('Unable to save the local endpoint setting.');
 		}
@@ -37,14 +39,15 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 	// webCoRE dashboard endpoint URL, bypassing the registration code (which
 	// otherwise just fetches that same URL from api.webcore.co).
 	$scope.showInstanceLogin = false;
-	$scope.instanceUri = '';
+	// Object model so the input inside ng-if two-way binds correctly.
+	$scope.instanceLogin = { uri: '' };
 
 	$scope.toggleInstanceLogin = function() {
 		$scope.showInstanceLogin = !$scope.showInstanceLogin;
 	};
 
 	$scope.loginWithInstance = function() {
-		var input = ($scope.instanceUri || '').trim();
+		var input = ($scope.instanceLogin.uri || '').trim();
 		if (!input) {
 			$scope.setStatus('Please paste your Hubitat instance URL.');
 			return;
