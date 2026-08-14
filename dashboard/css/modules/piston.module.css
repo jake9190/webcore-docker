@@ -258,13 +258,22 @@ console > content eval {
 	line-height: 18px;
 	font-size: 0.75em;
 	border-bottom: solid 1px #ccc;
-	white-space: pre-wrap;
+}
+
+/* Expression operand output: allow wrapping and text selection/copy */
+.form-table label.form-control.ellipsis[ng-bind-html] {
+	white-space: normal;
+	overflow: visible;
+	text-overflow: clip;
+	height: auto;
+	min-height: 34px;
 	overflow-wrap: break-word;
 	word-break: break-word;
 	-webkit-user-select: text;
 	-moz-user-select: text;
 	-ms-user-select: text;
 	user-select: text;
+	cursor: text;
 }
 
 console > content eval:nth-child(2n+1) {
