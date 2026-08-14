@@ -39,9 +39,9 @@
 									<li class="dropdown"><a href="" ng-click="test();" title="Test the piston"><i class="fas fa-play-circle fa-lg fa-fw"></i> Test</a></li>
 									<li class="dropdown"><a href="" ng-click="snapshot(true);" title="Take an anonymized snapshot of the piston"><i class="fas fa-camera fa-lg fa-fw"></i> Anonymized Snapshot</a></li>
 									<li class="dropdown"><a href="" ng-click="snapshot();" title="Take a snapshot of the piston"><i class="fas fa-camera fa-lg fa-fw"></i> Snapshot</a></li>
-									<li class="dropdown"><a href="" ng-click="textSnapshot();" title="Copy piston to clipboard"><i class="fal fa-copy fa-lg fa-fw"></i> Copy Piston</a></li>
+									<li class="dropdown"><a href="" ng-click="textSnapshot();" title="Copy piston to clipboard"><i class="fas fa-copy fa-lg fa-fw"></i> Copy Piston</a></li>
 									<li ng-if="trace && trace.points"><a href="" ng-click="view.trace = !view.trace; toggleView(null);"><checkbox checked="view.trace" icon-class="fa-lg fa-fw"></checkbox> Trace</a></li>
-									<li class="dropdown"><a href="" ng-click="deleteDialog();" title="Delete piston"><i class="fal fa-times fa-lg fa-fw"></i> Delete</a></li>
+									<li class="dropdown"><a href="" ng-click="deleteDialog();" title="Delete piston"><i class="fas fa-times fa-lg fa-fw"></i> Delete</a></li>
 								</ul>
 							</li>
 				</ul>
@@ -52,11 +52,11 @@
 <!-- Edit mode -->
 
 			<div ng-if="mode=='edit'" class="nav navbar-nav btn-group hidden-xxs">
-				<button class="btn btn-default {{view.variables ? 'active' : ''}}" ng-click="toggleView('variables');" title="Show variables"><i class="far fa-superscript"></i></button>
-				<button class="btn btn-default {{view.elseIfs ? 'active' : ''}}" ng-click="toggleView('elseIfs');" title="Show complex IFs"><i class="far fa-code-branch"></i></button>
+				<button class="btn btn-default {{view.variables ? 'active' : ''}}" ng-click="toggleView('variables');" title="Show variables"><i class="fas fa-superscript"></i></button>
+				<button class="btn btn-default {{view.elseIfs ? 'active' : ''}}" ng-click="toggleView('elseIfs');" title="Show complex IFs"><i class="fas fa-code-branch"></i></button>
 				<button class="btn btn-default {{view.restrictions ? 'active' : ''}}" ng-click="toggleView('restrictions');" title="Show restrictions"><i class="fas fa-filter"></i></button>
 				<button class="btn btn-default {{view.movable ? 'active' : ''}}" ng-click="toggleView('movable');" title="Allow moving of items by drag & drop"><i class="fas fa-sort"></i></button>
-				<button class="btn btn-default {{view.console ? 'active' : ''}}" ng-click="toggleView('console');" title="Show evaluation console"><i class="fal fa-terminal"></i></button>
+				<button class="btn btn-default {{view.console ? 'active' : ''}}" ng-click="toggleView('console');" title="Show evaluation console"><i class="fas fa-terminal"></i></button>
 			</div>
 			<div ng-if="mode=='edit'" class="nav navbar-nav btn-group">
 				<button class="btn btn-default" title="Undo" ng-click="undo();" ng-disabled="!stack || !stack.undo || !stack.undo.length"><i class="fa fa-undo"></i>
@@ -371,10 +371,6 @@
 			<a ng-repeat="(name, var) in globalVars" ng-click="editGlobalVariable(name);"><span typ>{{var.t}}</span> <span var>{{name}}</span><span pun> = </span><span ng-bind-html="formatVariableValue(var)"></span><span pun>;</span></a>
 			<a ng-click="addGlobalVariable()"><span new>+ add a new global variable</span></a>
 		</panel>
-		<panel>
-			<label>Devices</label>
-			<div ng-repeat="device in devices" dev ng-bind-html="renderDevice(device);"></div>
-		</panel>
 	</toolbar>
 </viewer>
 
@@ -385,7 +381,7 @@
 	<button class="btn btn-warning" ng-click="test();" title="Test the piston">Test</button>
 	<button class="btn btn-success" ng-click="snapshot(true);" title="Take an anonymized snapshot of the piston"><i class="fas fa-camera" data-fa-transform="grow-4"></i></button>
 	<button class="btn btn-danger" ng-click="snapshot();" title="Take a snapshot of the piston"><i class="fas fa-camera" data-fa-transform="grow-4"></i></button>
-	<button class="btn btn-default" ng-click="textSnapshot();" title="Copy piston to clipboard"><i class="fal fa-copy" data-fa-transform="grow-4"></i></button>
+	<button class="btn btn-default" ng-click="textSnapshot();" title="Copy piston to clipboard"><i class="fas fa-copy" data-fa-transform="grow-4"></i></button>
 	<toggle ng-if="trace && trace.points" ng-model="view.trace" on="Trace" off="Trace" ng-click="toggleView(null)"></toggle>
 	<button class="btn btn-danger" ng-click="deleteDialog();">Delete</button>
 </script>

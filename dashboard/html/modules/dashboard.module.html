@@ -418,7 +418,7 @@
       </header>
       <items>
            <item ng-repeat="item in designer.items" type="{{item.type}}" class="btn btn-block btn-lg {{item.cssClass}}" ng-click="setDesignerType(item.type)">
-             <i class="fal fa-lg fa-{{item.icon}}"></i>
+             <i class="fas fa-lg fa-{{item.icon}}"></i>
              {{item.name}}
           </item>
       </items>
@@ -489,6 +489,12 @@
           <div class="form-group">
 	            <label for="name">Piston name</label>
                   <input class="form-control"  id="name" ng-model="designer.name" type="text" />
+          </div>
+          <div class="form-group">
+	            <label for="category">Category</label>
+                  <select id="category" class="form-control" ng-model="designer.category">
+                      <option ng-repeat="category in designer.categories" value="{{category.i}}">{{category.n ? category.n : '(no name)'}}</option>
+                  </select>
           </div>
 		<div class="form-group" ng-if="designer.type=='duplicate'">
 			<label for="piston">Select the piston you want to duplicate</label>

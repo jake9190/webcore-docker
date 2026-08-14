@@ -654,6 +654,8 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 				$scope.designer.page = 0;
 				$scope.designer.backup = !!dataService.loadFromStore('backup.auto');
 				$scope.designer.disclaimer = !$scope.designer.backup;
+				$scope.designer.categories = $scope.getCategories();
+				$scope.designer.category = ($scope.instance && $scope.instance.settings && ($scope.instance.settings.defaultCategory !== undefined)) ? ('' + $scope.instance.settings.defaultCategory) : '0';
 				$scope.designer.items = [
 					{ type: 'blank', name: 'Create a blank piston', icon: 'code', cssClass: 'wide btn-default' },
 					{ type: 'duplicate', name: 'Create a duplicate piston', icon: 'code', cssClass: 'wide btn-info' },
@@ -883,16 +885,24 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 			}, 100);
 			return data;
 		};
+		var applyCategory = function(data) {
+			if (data && data.id && $scope.designer.category !== undefined && $scope.designer.category !== null && ('' + $scope.designer.category) !== '0') {
+				return dataService.setPistonCategory(data.id, $scope.designer.category).then(function() {
+					return data;
+				});
+			}
+			return data;
+		};
 		$scope.loading = true;
 		dataService.saveToStore('backup.auto', !!$scope.designer.backup);
 		dataService.saveToStore('author.handle', $scope.designer.author);
 		if ($scope.designer.backup) {
 			return dataService.generateBackupBin().then(function(response) {
 				var binId = response.data;
-				dataService.createPiston($scope.designer.name, $scope.designer.author, binId).then(success);
+				dataService.createPiston($scope.designer.name, $scope.designer.author, binId).then(applyCategory).then(success);
 			});
 		} else {
-			return dataService.createPiston($scope.designer.name, $scope.designer.author).then(success);
+			return dataService.createPiston($scope.designer.name, $scope.designer.author).then(applyCategory).then(success);
 		}
     };
 
