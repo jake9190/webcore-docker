@@ -2332,6 +2332,83 @@ $(document.documentElement).on('touchstart', '.navbar-collapse *', function (e) 
   e.stopPropagation();
 });
 
+// Long-press to open the context menu on touch devices.
+// The bundled ui.bootstrap.contextMenu directive only listens for the native
+// 'contextmenu' event, which touch devices do not fire on a long-press. This
+// bridges the gap by synthesizing a 'contextmenu' event after a press-and-hold,
+// so the same edit-mode menus (copy/cut/duplicate/delete) work on mobile.
+(function () {
+  var LONGPRESS_MS = 550;   // hold duration before the menu opens
+  var MOVE_TOLERANCE = 10;  // px of movement allowed before it's treated as a scroll
+  var timer = null;
+  var target = null;
+  var startX = 0, startY = 0;
+  var lastSynthetic = 0;
+
+  function cancel() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    target = null;
+  }
+
+  function fire() {
+    timer = null;
+    var el = target;
+    target = null;
+    if (!el) return;
+    var x = startX, y = startY;
+    var evt;
+    try {
+      evt = new MouseEvent('contextmenu', { bubbles: true, cancelable: true, view: window, button: 2, clientX: x, clientY: y });
+    } catch (ex) {
+      evt = document.createEvent('MouseEvents');
+      evt.initMouseEvent('contextmenu', true, true, window, 1, x, y, x, y, false, false, false, false, 2, null);
+    }
+    evt._synthetic = true;
+    // The menu uses pageX/pageY for positioning; synthetic events default to 0.
+    try {
+      Object.defineProperty(evt, 'pageX', { configurable: true, get: function () { return x + window.pageXOffset; } });
+      Object.defineProperty(evt, 'pageY', { configurable: true, get: function () { return y + window.pageYOffset; } });
+    } catch (ex) { /* older browsers: positioning falls back to 0,0 */ }
+    lastSynthetic = Date.now();
+    el.dispatchEvent(evt);
+  }
+
+  // Some touch browsers (e.g. Android Chrome) also fire a native contextmenu on
+  // long-press. Swallow it if we just dispatched our own to avoid a double menu.
+  document.addEventListener('contextmenu', function (e) {
+    if (e._synthetic) return;
+    if (Date.now() - lastSynthetic < 1000) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+    }
+  }, true);
+
+  document.addEventListener('touchstart', function (e) {
+    cancel();
+    if (!e.touches || e.touches.length !== 1 || !e.target || !e.target.closest) return;
+    // Draggable items are reserved for hold-to-drag; don't hijack their long-press.
+    if (e.target.closest('[draggable="true"], [dnd-draggable]')) return;
+    var el = e.target.closest('[context-menu]');
+    if (!el) return;
+    target = el;
+    var t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+    timer = setTimeout(fire, LONGPRESS_MS);
+  }, true);
+
+  document.addEventListener('touchmove', function (e) {
+    if (!timer || !e.touches || !e.touches.length) return;
+    var t = e.touches[0];
+    if (Math.abs(t.clientX - startX) > MOVE_TOLERANCE || Math.abs(t.clientY - startY) > MOVE_TOLERANCE) {
+      cancel();
+    }
+  }, true);
+
+  document.addEventListener('touchend', cancel, true);
+  document.addEventListener('touchcancel', cancel, true);
+})();
+
 
 window.onerror = function myErrorHandler(errorMsg, url, lineNumber) {
     //alert("Error occured: " + errorMsg + ' at ' + url + ' line ' + lineNumber);//or any message
