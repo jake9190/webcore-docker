@@ -258,6 +258,13 @@ console > content eval {
 	line-height: 18px;
 	font-size: 0.75em;
 	border-bottom: solid 1px #ccc;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+	word-break: break-word;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	-ms-user-select: text;
+	user-select: text;
 }
 
 console > content eval:nth-child(2n+1) {
