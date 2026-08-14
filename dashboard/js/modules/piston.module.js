@@ -2270,6 +2270,38 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		$scope.doValidatePiston();
 	}
 
+	// Custom drop handler for the conditions list. Conditions are rendered with
+	// ng-repeat-start/ng-repeat-end (two DOM nodes per item) and are interleaved
+	// with operator/"add" lines, so the index dnd-list derives from the raw child
+	// position of its placeholder is wrong (e.g. dropping at slot 4 lands at 8).
+	// Recompute the true model index by counting only the draggable siblings that
+	// precede the drop placeholder, then insert there. Returning true tells
+	// dnd-list not to perform its own (incorrectly indexed) insertion.
+	$scope.dropCondition = function(list, item, event) {
+		var container = (event && event.currentTarget) || (event && event.target && event.target.closest ? event.target.closest('[dnd-list]') : null);
+		var index = list.length;
+		if (container && container.children) {
+			var placeholder = null, children = container.children, i;
+			for (i = 0; i < children.length; i++) {
+				if (children[i].classList && children[i].classList.contains('dndPlaceholder')) { placeholder = children[i]; break; }
+			}
+			if (placeholder) {
+				index = 0;
+				var sib = placeholder.previousElementSibling;
+				while (sib) {
+					if (sib.hasAttribute && sib.hasAttribute('dnd-draggable')) index++;
+					sib = sib.previousElementSibling;
+				}
+			}
+		}
+		if (index < 0) index = 0;
+		if (index > list.length) index = list.length;
+		list.splice(index, 0, item);
+		$scope.autoSave();
+		$scope.doValidatePiston();
+		return true;
+	}
+
 	$scope.copyVariable = function(list, index) {
 		var variable = list[index];
 		for (var i = 0; i < list.length; i++) {

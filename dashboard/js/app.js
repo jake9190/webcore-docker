@@ -2371,6 +2371,29 @@ $(document.documentElement).on('touchstart', '.navbar-collapse *', function (e) 
     } catch (ex) { /* older browsers: positioning falls back to 0,0 */ }
     lastSynthetic = Date.now();
     el.dispatchEvent(evt);
+    // After touchend the browser emits emulated mouse events (mousedown/up/click)
+    // at the press point. Those land outside the freshly opened menu and would
+    // immediately close it, so swallow them briefly (menu taps are allowed).
+    suppressEmulatedMouse();
+  }
+
+  function suppressEmulatedMouse() {
+    var until = Date.now() + 800;
+    function handler(e) {
+      if (Date.now() > until) { cleanup(); return; }
+      if (e.target && e.target.closest && e.target.closest('.dropdown-menu')) return;
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      if (e.type === 'mouseup') cleanup();
+    }
+    function cleanup() {
+      document.removeEventListener('mousedown', handler, true);
+      document.removeEventListener('mouseup', handler, true);
+      document.removeEventListener('click', handler, true);
+    }
+    document.addEventListener('mousedown', handler, true);
+    document.addEventListener('mouseup', handler, true);
+    document.addEventListener('click', handler, true);
   }
 
   // Some touch browsers (e.g. Android Chrome) also fire a native contextmenu on
@@ -2386,8 +2409,9 @@ $(document.documentElement).on('touchstart', '.navbar-collapse *', function (e) 
   document.addEventListener('touchstart', function (e) {
     cancel();
     if (!e.touches || e.touches.length !== 1 || !e.target || !e.target.closest) return;
-    // Draggable items are reserved for hold-to-drag; don't hijack their long-press.
-    if (e.target.closest('[draggable="true"], [dnd-draggable]')) return;
+    // Drag handles start a drag on hold (handled by the touch drag shim); leave
+    // them alone. Long-pressing anywhere else on the item opens the menu.
+    if (e.target.closest('[dnd-handle], handle')) return;
     var el = e.target.closest('[context-menu]');
     if (!el) return;
     target = el;
