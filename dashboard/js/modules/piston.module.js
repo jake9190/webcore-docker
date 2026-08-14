@@ -963,8 +963,28 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		if (!$scope.selection) return;
 		if (!$scope.selectionParent) return;
 		if ($scope.selectionParent instanceof Array) {
-			$scope.selectionParent.push($scope.copy($scope.selection));
+			var clone = $scope.copy($scope.selection);
+			// A variable's name must be unique, so give the duplicate a fresh one.
+			if ($scope.selectionType == 'variable') {
+				clone.n = $scope.uniqueVariableName(clone.n, $scope.selectionParent);
+			}
+			$scope.selectionParent.push(clone);
+			$scope.autoSave();
+			$scope.doValidatePiston();
 		}
+	}
+
+	$scope.uniqueVariableName = function(name, list) {
+		var base = ('' + (name || 'variable')).replace(/_\d+$/, '');
+		var exists = function(n) {
+			for (var i = 0; i < list.length; i++) if (list[i].n === n) return true;
+			return false;
+		};
+		var counter = 1, candidate;
+		do {
+			candidate = base + '_' + counter++;
+		} while (exists(candidate));
+		return candidate;
 	}
 
 	$scope.deleteSelection = function() {
@@ -2296,7 +2316,17 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		}
 		if (index < 0) index = 0;
 		if (index > list.length) index = list.length;
-		list.splice(index, 0, item);
+		// Insert inside a digest so ng-repeat reconciles (and every $index is
+		// refreshed) before the source's dnd-moved handler removes the original.
+		// Otherwise dnd-moved would evaluate a stale $index and remove the wrong
+		// item (e.g. moving 8:01 before 7:01 would leave two 8:01 entries).
+		if ($scope.$root && $scope.$root.$$phase) {
+			list.splice(index, 0, item);
+		} else {
+			$scope.$apply(function() {
+				list.splice(index, 0, item);
+			});
+		}
 		$scope.autoSave();
 		$scope.doValidatePiston();
 		return true;
