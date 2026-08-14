@@ -323,7 +323,7 @@ tr[active=false] {
 	font-weight: 300;
 }
 
-td svg[star] {
+td svg[star], td i[star] {
 	color: #15bfff;
 	margin: 4px 4px 0px 0px;
 	vertical-align: top;
