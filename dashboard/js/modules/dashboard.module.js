@@ -655,7 +655,7 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 				$scope.designer.backup = !!dataService.loadFromStore('backup.auto');
 				$scope.designer.disclaimer = !$scope.designer.backup;
 				$scope.designer.categories = $scope.getCategories();
-				$scope.designer.category = ($scope.instance && $scope.instance.settings && ($scope.instance.settings.defaultCategory !== undefined)) ? ('' + $scope.instance.settings.defaultCategory) : '0';
+				$scope.designer.category = ($scope.instance && $scope.instance.settings && ($scope.instance.settings.defaultCategory !== undefined) && ($scope.instance.settings.defaultCategory !== null) && ($scope.instance.settings.defaultCategory !== '')) ? ('' + $scope.instance.settings.defaultCategory) : '0';
 				$scope.designer.items = [
 					{ type: 'blank', name: 'Create a blank piston', icon: 'code', cssClass: 'wide btn-default' },
 					{ type: 'duplicate', name: 'Create a duplicate piston', icon: 'code', cssClass: 'wide btn-info' },
@@ -886,8 +886,9 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 			return data;
 		};
 		var applyCategory = function(data) {
-			if (data && data.id && $scope.designer.category !== undefined && $scope.designer.category !== null && ('' + $scope.designer.category) !== '0') {
-				return dataService.setPistonCategory(data.id, $scope.designer.category).then(function() {
+			var category = ('' + $scope.designer.category);
+			if (data && data.id && $scope.designer.category !== undefined && $scope.designer.category !== null && category !== '' && category !== 'null' && category !== '0') {
+				return dataService.setPistonCategory(data.id, category).then(function() {
 					return data;
 				});
 			}
