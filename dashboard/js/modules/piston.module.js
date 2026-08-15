@@ -1005,12 +1005,19 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 	$scope.contextMenu = function(item) {
 		var result = [];
 		if ($scope.selection) {
-			result.push(['Copy selected ' + $scope.selectionType, $scope.copySelection]);
+			// Copy/Cut aren't supported for variables, so omit them.
+			var isVariable = ($scope.selectionType == 'variable');
+			if (!isVariable) {
+				result.push(['Copy selected ' + $scope.selectionType, $scope.copySelection]);
+			}
 			if ($scope.mode == 'edit') {
 				result.push(['Duplicate selected ' + $scope.selectionType, $scope.duplicateSelection]);
 				if ($scope.selectionParent) {
+					if (!isVariable) {
+						result.push(null);
+						result.push(['Cut selected ' + $scope.selectionType, $scope.cutSelection]);
+					}
 					result.push(null);
-					result.push(['Cut selected ' + $scope.selectionType, $scope.cutSelection]);
 					result.push(['Delete selected ' + $scope.selectionType, $scope.deleteSelection]);
 				}
 			}

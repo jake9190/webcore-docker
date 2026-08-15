@@ -2371,6 +2371,12 @@ $(document.documentElement).on('touchstart', '.navbar-collapse *', function (e) 
     } catch (ex) { /* older browsers: positioning falls back to 0,0 */ }
     lastSynthetic = Date.now();
     el.dispatchEvent(evt);
+    // Clear any text selection iOS may have started on the long-press so its
+    // native callout (Copy/Look Up/…) doesn't linger over our menu.
+    try {
+      var sel = window.getSelection && window.getSelection();
+      if (sel && sel.removeAllRanges) sel.removeAllRanges();
+    } catch (ex) { /* ignore */ }
     // After touchend the browser emits emulated mouse events (mousedown/up/click)
     // at the press point. Those land outside the freshly opened menu and would
     // immediately close it, so swallow them briefly (menu taps are allowed).

@@ -3,6 +3,17 @@ ng-view {
 	display: block;
 }
 
+/* On touch devices a long-press opens our custom context menu. Suppress the
+   iOS text-selection callout (Copy/Look Up/Translate…) and the selection
+   highlight so they don't cover our menu. */
+[context-menu] {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
 viewer[mode=view] {
 	overflow-y: auto;
 }
