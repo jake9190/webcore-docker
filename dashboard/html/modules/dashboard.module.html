@@ -222,16 +222,24 @@
 
     <div class="tab-content clearfix">
       <div class="tab-pane" id="general">
-			<panel name="Local endpoint override">
-				<p>Route dashboard API traffic directly to your hub or a local reverse proxy instead of the Hubitat cloud. Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code>. Leave blank to use the cloud / registered endpoint.</p>
+			<panel name="API endpoint">
+				<p>Choose whether the dashboard talks to the cloud or directly to a local endpoint (your hub or a local reverse proxy). The local endpoint routes dashboard API traffic to the base URL you provide.</p>
 				<div class="form-group row">
+					<label class="control-label col-sm-3">Endpoint</label>
+					<div class="col-sm-9">
+						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="cloud"/> Cloud (registered endpoint)</label>
+						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="local"/> Local</label>
+					</div>
+				</div>
+				<div class="form-group row" ng-if="endpointMode == 'local'">
 					<label class="control-label col-sm-3">Local API base URL</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="localApiBase" placeholder="https://hubitat.domain.com"/>
+						<span class="help-block">Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code> or <code>http://192.168.1.20</code>.</span>
 					</div>
 				</div>
 				<div class="text-right">
-					<button class="btn btn-info" ng-click="saveLocalApiBase()">Save local endpoint</button>
+					<button class="btn btn-info" ng-click="saveEndpoint()">Save endpoint</button>
 				</div>
 			</panel>
 	</div>
