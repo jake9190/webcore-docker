@@ -586,6 +586,9 @@ line[com],
 span[com],
 span.hl.com {
 	color: var(--piston-line-com) !important;
+	/* Preserve author-entered line breaks in comments instead of collapsing
+	   them to a single line, while still wrapping long lines. */
+	white-space: pre-wrap;
 }
 
 line[warn],
