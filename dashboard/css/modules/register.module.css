@@ -59,16 +59,24 @@ ng-view {
 	margin-bottom: 0;
 }
 
-.advanced-toggle .btn-link {
+.advanced-toggle .btn-link,
+.advanced-toggle .btn-link:hover,
+.advanced-toggle .btn-link:focus,
+.advanced-toggle .btn-link:active {
+	/* Override the global .btn light background so the link-style toggle sits
+	   on the page background and its text stays readable in both themes. */
+	background: transparent;
 	color: var(--text-color);
-	text-decoration: none;
 	font-size: 0.9em;
 	white-space: normal;
 }
 
+.advanced-toggle .btn-link {
+	text-decoration: none;
+}
+
 .advanced-toggle .btn-link:hover,
 .advanced-toggle .btn-link:focus {
-	color: var(--text-color);
 	text-decoration: underline;
 }
 
