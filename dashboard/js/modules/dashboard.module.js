@@ -276,30 +276,25 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		$scope.settings = $scope.copy($scope.instance.settings);
 		$scope.settings.categories = $scope.getCategories();
 		$scope.settings.places = $scope.getPlaces();
-		// Current API endpoint selection, for viewing/editing in Settings > General.
-		$scope.endpointMode = (typeof getEndpointMode === 'function' ? getEndpointMode() : 'cloud');
-		$scope.localApiBase = (typeof getStoredLocalApiBase === 'function' ? getStoredLocalApiBase() : '');
+		// Current local endpoint override, for viewing/editing in Settings > General.
+		$scope.localApiBase = (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '');
 		$scope.view = 'settings';
 	};
 
-	// Persist the endpoint mode (cloud/local) and the local endpoint URL, then
-	// reload so it applies to the stored instance (the hub-reported endpoint is
-	// rewritten to the local base when local mode is active).
-	$scope.saveEndpoint = function() {
+	// Cloud/Local label for the active instance's endpoint, shown in the header.
+	$scope.endpointType = function() {
+		return (typeof dataService.getEndpointType === 'function') ? dataService.getEndpointType() : '';
+	};
+
+	// Persist the local endpoint override and reload so it applies to the
+	// stored instance (the hub-reported endpoint is rewritten to this base).
+	$scope.saveLocalApiBase = function() {
 		var v = ($scope.localApiBase || '').trim().replace(/\/+$/, '');
-		var mode = ($scope.endpointMode === 'local') ? 'local' : 'cloud';
-		if (mode === 'local') {
-			if (!v) {
-				alert('Enter a local endpoint URL or choose Cloud.');
-				return;
-			}
-			if (!/^https?:\/\//i.test(v)) {
-				alert('Local endpoint must start with http:// or https://');
-				return;
-			}
+		if (v && !/^https?:\/\//i.test(v)) {
+			alert('Local endpoint must start with http:// or https://');
+			return;
 		}
 		try {
-			window.localStorage.setItem('webcore:endpointMode', mode);
 			if (v) window.localStorage.setItem('webcore:localApiBase', v);
 			else window.localStorage.removeItem('webcore:localApiBase');
 			$scope.localApiBase = v;

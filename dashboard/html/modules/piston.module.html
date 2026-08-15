@@ -26,7 +26,7 @@
 <!-- View mode -->
 
 			<div ng-if="mode=='view'" class="nav navbar-nav btn-group hidden-xs hidden-sm">
-				<span class="title btn" title="Back to piston list" ng-click="home()"><i class="fa fa-chevron-left"></i>&nbsp;{{location.name}} \ {{instance.name}} ({{instance.coreVersion.split('.').splice(0,3).join('.')}})</span>
+				<span class="title btn" title="Back to piston list" ng-click="home()"><i class="fa fa-chevron-left"></i>&nbsp;{{location.name}} \ {{instance.name}} ({{instance.coreVersion.split('.').splice(0,3).join('.')}})<small class="endpoint-badge" ng-if="instance && endpointType()">{{endpointType()}}</small></span>
 			</div>
 			<div ng-if="mode=='view'" class="nav navbar-nav btn-group hidden-md hidden-lg">
 					<span class="title btn" title="Back to piston list" ng-click="home()"><i class="fa fa-chevron-left"></i>&nbsp;Back</span>

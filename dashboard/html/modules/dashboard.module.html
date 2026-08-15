@@ -14,7 +14,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand">{{location.name}} \ {{instance ? instance.name + ' (' + instance.coreVersion.split('.').splice(0,3).join('.') + ')' : 'loading...'}}</a>
+      <a class="navbar-brand">{{location.name}} \ {{instance ? instance.name + ' (' + instance.coreVersion.split('.').splice(0,3).join('.') + ')' : 'loading...'}}<small class="endpoint-badge" ng-if="instance && endpointType()">{{endpointType()}}</small></a>
     </div>
 
 <!--External links // collapsed on xs-->
@@ -28,7 +28,7 @@
 <!-- Nav links and content -->
     <div class="collapse navbar-collapse" id="navbar">
       <ul class="nav navbar-nav" ng-init="locations = listLocations()">
-        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{location.name}} \ {{instance ? instance.name + ' (' + instance.coreVersion.split('.').splice(0,3).join('.') + ')' : 'loading...'}}<span class="caret"></span></a>
+        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{location.name}} \ {{instance ? instance.name + ' (' + instance.coreVersion.split('.').splice(0,3).join('.') + ')' : 'loading...'}}<small class="endpoint-badge" ng-if="instance && endpointType()">{{endpointType()}}</small><span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li role="separator" class="dropdown-header" ng-repeat-start="l in locations" ng-init="instances = listInstances(l.id)">{{l.name}}</li>
             	<li instance ng-repeat="i in instances" ng-repeat-end ng-click="switchInstance(i.id);"><a><checkbox checked="i.id == instance.id" radio="true" icon-class="fa-lg fa-fw"></checkbox> {{l.name}} \ {{i.name}} ({{i.coreVersion.split('.').splice(0,3).join('.')}})</a></li>
@@ -222,24 +222,16 @@
 
     <div class="tab-content clearfix">
       <div class="tab-pane" id="general">
-			<panel name="API endpoint">
-				<p>Choose whether the dashboard talks to the cloud or directly to a local endpoint (your hub or a local reverse proxy). The local endpoint routes dashboard API traffic to the base URL you provide.</p>
+			<panel name="Local endpoint override">
+				<p>Route dashboard API traffic directly to your hub or a local reverse proxy instead of the Hubitat cloud. Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code>. Leave blank to use the cloud / registered endpoint.</p>
 				<div class="form-group row">
-					<label class="control-label col-sm-3">Endpoint</label>
-					<div class="col-sm-9">
-						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="cloud"/> Cloud (registered endpoint)</label>
-						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="local"/> Local</label>
-					</div>
-				</div>
-				<div class="form-group row" ng-if="endpointMode == 'local'">
 					<label class="control-label col-sm-3">Local API base URL</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="localApiBase" placeholder="https://hubitat.domain.com"/>
-						<span class="help-block">Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code> or <code>http://192.168.1.20</code>.</span>
 					</div>
 				</div>
 				<div class="text-right">
-					<button class="btn btn-info" ng-click="saveEndpoint()">Save endpoint</button>
+					<button class="btn btn-info" ng-click="saveLocalApiBase()">Save local endpoint</button>
 				</div>
 			</panel>
 	</div>

@@ -67,6 +67,11 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		return $window.version();
 	}
 
+	// Cloud/Local label for the active instance's endpoint, shown in the header.
+	$scope.endpointType = function() {
+		return (typeof dataService.getEndpointType === 'function') ? dataService.getEndpointType() : '';
+	}
+
 
 	$scope.encodeEmoji = function(value) {
 		if (!value) return '';

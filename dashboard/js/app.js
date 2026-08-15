@@ -22,29 +22,6 @@ var localApiBase = '';
 // Returns the effective local API base URL (runtime override wins over the
 // compiled-in default above). Empty string means "no override / use cloud".
 function getLocalApiBase() {
-	// Only route to the local endpoint when the user has selected "local" mode.
-	if (getEndpointMode() !== 'local') return '';
-	return getStoredLocalApiBase();
-}
-
-// The endpoint mode selects where dashboard API traffic goes:
-//   'cloud' -> use the registered cloud endpoint (default)
-//   'local' -> use the stored local endpoint (getStoredLocalApiBase)
-// The stored local URL is kept even while in cloud mode, so switching back to
-// local restores the previously entered endpoint.
-function getEndpointMode() {
-	try {
-		var m = window.localStorage.getItem('webcore:endpointMode');
-		if (m === 'local' || m === 'cloud') return m;
-	} catch (e) {}
-	// Backward compatibility: a saved local base from before modes existed
-	// (or a compiled-in default) implies local mode.
-	if (getStoredLocalApiBase()) return 'local';
-	return 'cloud';
-}
-
-// Returns the stored/compiled local API base URL regardless of the current mode.
-function getStoredLocalApiBase() {
 	try {
 		var override = window.localStorage.getItem('webcore:localApiBase');
 		if (override !== null && override !== undefined) return override.trim();
@@ -1126,6 +1103,19 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		var inst = dataService.getInstance();
 		si = store ? store[inst.id] : null;
 		return si ? si.uri : null;		
+	}
+
+	// Classifies the active instance's endpoint as 'Cloud' or 'Local' based on
+	// its API host. Vendor clouds (hubitat.com / smartthings) are Cloud; any
+	// other host (a LAN IP or a local reverse proxy) is treated as Local.
+	dataService.getEndpointType = function() {
+		var uri = dataService.getApiUri();
+		if (!uri || (typeof uri !== 'string')) return '';
+		var m = uri.match(/^https?:\/\/([^\/:]+)/i);
+		var host = m ? m[1] : '';
+		if (!host) return '';
+		if (/(^|\.)hubitat\.com$/i.test(host) || /(^|\.)smartthings\.com$/i.test(host) || /(^|\.)api\.smartthings\.com$/i.test(host)) return 'Cloud';
+		return 'Local';
 	}
 
     dataService.refreshDashboard = function () {

@@ -903,6 +903,21 @@ span.s-up {
 .tooltip.top .tooltip-arrow { border-top-color: var(--text-color) ; }
 .tooltip.bottom .tooltip-arrow { border-bottom-color: var(--text-color) ; }
 
+/* Cloud/Local endpoint indicator shown next to the version in the header. */
+.endpoint-badge {
+	display: inline-block;
+	margin-left: 8px;
+	padding: 1px 8px;
+	border: 1px solid currentColor;
+	border-radius: 10px;
+	font-size: 0.7em;
+	font-weight: 600;
+	letter-spacing: 0.5px;
+	text-transform: uppercase;
+	vertical-align: middle;
+	opacity: 0.85;
+}
+
 @media only screen and (max-width: 767px) {
 
   .navbar-collapse {
