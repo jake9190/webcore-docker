@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Docker Build (minify assets)",
+			"type": "shell",
+			"command": "docker compose build",
+			"group": "build"
+		}
+	]
+}

@@ -278,7 +278,41 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		$scope.settings.places = $scope.getPlaces();
 		// Current local endpoint override, for viewing/editing in Settings > General.
 		$scope.localApiBase = (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '');
+		$scope.refreshDebugDump();
 		$scope.view = 'settings';
+	};
+
+	// Settings > Debug: dump the decrypted browser-stored data (IndexedDB +
+	// localStorage) as formatted JSON for troubleshooting.
+	$scope.refreshDebugDump = function() {
+		$scope.debugCopied = false;
+		try {
+			$scope.debugDump = JSON.stringify(dataService.getStorageDump(), null, 2);
+		} catch (e) {
+			$scope.debugDump = 'Unable to read browser storage: ' + (e && e.message ? e.message : e);
+		}
+	};
+
+	$scope.copyDebugDump = function() {
+		var text = $scope.debugDump || '';
+		var done = function() { $scope.$applyAsync(function() { $scope.debugCopied = true; }); };
+		try {
+			if (navigator.clipboard && navigator.clipboard.writeText) {
+				navigator.clipboard.writeText(text).then(done, function() {});
+				return;
+			}
+		} catch (e) {}
+		try {
+			var ta = document.createElement('textarea');
+			ta.value = text;
+			ta.style.position = 'fixed';
+			ta.style.left = '-9999px';
+			document.body.appendChild(ta);
+			ta.select();
+			document.execCommand('copy');
+			document.body.removeChild(ta);
+			done();
+		} catch (e) {}
 	};
 
 	// Cloud/Local label for the active instance's endpoint, shown in the header.

@@ -218,6 +218,8 @@
     </li>
     <li><a data-target="#backups" data-toggle="tab">Backups</a>
     </li>
+    <li><a data-target="#debug" data-toggle="tab">Debug</a>
+    </li>
 </ul>
 
     <div class="tab-content clearfix">
@@ -348,6 +350,17 @@
 			</tbody>
 		</table>
 	</panel>	
+</div>
+<div class="tab-pane" id="debug">
+	<panel name="Browser storage dump">
+		<p>Everything webCoRE stores in this browser: the IndexedDB (localforage) contents plus any <code>webcore:*</code> keys in localStorage, decrypted for troubleshooting.</p>
+		<p class="text-danger"><b>Warning:</b> this includes sensitive values such as endpoint URLs, access tokens and session tokens. Redact them before sharing.</p>
+		<div class="text-right" style="margin-bottom: 10px;">
+			<button class="btn btn-info" ng-click="refreshDebugDump()">Refresh</button>
+			<button class="btn btn-info" ng-click="copyDebugDump()">{{debugCopied ? 'Copied!' : 'Copy to clipboard'}}</button>
+		</div>
+		<pre class="debug-dump">{{debugDump}}</pre>
+	</panel>
 </div>
   </div>
 	<form class="form-horizontal">

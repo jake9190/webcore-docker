@@ -3,6 +3,19 @@ ng-view {
 	display: block;
 }
 
+/* Settings > Debug storage dump */
+.debug-dump {
+	max-height: 60vh;
+	overflow: auto;
+	white-space: pre;
+	word-break: normal;
+	font-size: 12px;
+	line-height: 1.4;
+	color: var(--text-color);
+	background: var(--background-featured);
+	border: 1px solid var(--page-background);
+}
+
 /*
  * Base structure
  */
@@ -120,7 +133,7 @@ tile content refresh {
 	right: 2px;
 	bottom: 2px;
 	z-index: 999;
-	sbackground: rgba(0, 0, 0, 0.01);
+	background: rgba(0, 0, 0, 0.01);
 	color: #888;
 	text-align: center;
 }
@@ -169,9 +182,6 @@ tile device::before {
     -moz-transition: all 0.25s ease-in-out;
     -ms-transition: all 0.25s ease-in-out;
     -o-transition: all 0.25s ease-in-out;
-}
-
-tile device[type=dimmer] {
 }
 
 
@@ -535,7 +545,6 @@ ptiles {
 	display: block;
 	margin: 0px 0px;
 	white-space: normal;
-	vertical-align: top;
 }
 
 ptile {
@@ -798,7 +807,7 @@ ul.nav.nav-pills {
 }
 
 .nav-pills > li.active > a:focus,
-.nav-pills > li.active > a:hover, {
+.nav-pills > li.active > a:hover {
 	border-radius: 0px;
 }
 

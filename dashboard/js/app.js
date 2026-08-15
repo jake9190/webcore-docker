@@ -895,6 +895,24 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		return localforage.removeItem('core:' + key);
 	};
 
+	// Returns a decrypted snapshot of everything webCoRE keeps in the browser:
+	// the localforage/IndexedDB contents (already decrypted in memory) and any
+	// webcore:* keys in window.localStorage. Intended for the Settings > Debug
+	// dump; it includes sensitive values (endpoint URLs, tokens, access tokens).
+	dataService.getStorageDump = function() {
+		var dump = { indexedDb: {}, localStorage: {} };
+		for (var k in storage) {
+			if (storage.hasOwnProperty(k)) dump.indexedDb[k] = storage[k];
+		}
+		try {
+			for (var i = 0; i < window.localStorage.length; i++) {
+				var key = window.localStorage.key(i);
+				if (key && key.indexOf('webcore:') === 0) dump.localStorage[key] = window.localStorage.getItem(key);
+			}
+		} catch (e) {}
+		return dump;
+	};
+
 
 	dataService.loadFromStore = function(key) {
 		return readObject(key);
