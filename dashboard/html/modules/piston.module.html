@@ -819,8 +819,8 @@
 			<badge blue ng-if="condition.sm == 'always'" badge="+" title="Always subscribe"></badge>
 			<badge red ng-if="condition.sm == 'never'" badge="-" title="Never subscribe"></badge>
 		</line>
-		<line ng-if="!condition.c && !!condition.lo && (condition.lo.t == 'p') && !!condition.lo.dm" pun>&nbsp;&nbsp;<i class="far fa-subscript"></i> save matching devices to <span var>{{'{' + condition.lo.dm + '}'}}</span></line>
-		<line ng-if="!condition.c && !!condition.lo && (condition.lo.t == 'p') && !!condition.lo.dn" pun>&nbsp;&nbsp;<i class="far fa-subscript"></i> save non-matching devices to <span var>{{'{' + condition.lo.dn + '}'}}</span></line>
+		<line ng-if="!condition.c && !!condition.lo && (condition.lo.t == 'p') && !!condition.lo.dm" pun>&nbsp;&nbsp;<i class="fas fa-subscript"></i> save matching devices to <span var>{{'{' + condition.lo.dm + '}'}}</span></line>
+		<line ng-if="!condition.c && !!condition.lo && (condition.lo.t == 'p') && !!condition.lo.dn" pun>&nbsp;&nbsp;<i class="fas fa-subscript"></i> save non-matching devices to <span var>{{'{' + condition.lo.dn + '}'}}</span></line>
 		<container ng-if="((mode=='edit') && view.whens) || (condition.ts && condition.ts.length) || (condition.fs && condition.fs.length)">
 			<line pun>{</line>
 			<container>

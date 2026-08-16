@@ -32,8 +32,8 @@
             <ul class="dropdown-menu">
               <li role="separator" class="dropdown-header" ng-repeat-start="l in locations" ng-init="instances = listInstances(l.id)">{{l.name}}</li>
             	<li instance ng-repeat="i in instances" ng-repeat-end ng-click="switchInstance(i.id);"><a><checkbox checked="i.id == instance.id" radio="true" icon-class="fa-lg fa-fw"></checkbox> {{l.name}} \ {{i.name}} ({{i.coreVersion.split('.').splice(0,3).join('.')}})</a></li>
-              <li role="separator" class="divider" ng-if="!isSmartThings"></li>
-              <li ng-if="!isSmartThings" ng-click="toggleEndpoint();"><a><i class="fa fa-fw fa-exchange-alt"></i> Endpoint: {{endpointType()}} <small>(switch to {{endpointType() == 'Local' ? 'Cloud' : 'Local'}})</small></a></li>
+              <li role="separator" class="divider"></li>
+              <li ng-click="toggleEndpoint();"><a><i class="fa fa-fw fa-exchange-alt"></i> Endpoint: {{endpointType()}} <small>(switch to {{endpointType() == 'Local' ? 'Cloud' : 'Local'}})</small></a></li>
             </ul>
         </li>
 			</ul>
@@ -112,27 +112,6 @@
 			</div>
 			<div class="main no-ng-animate" ng-class="{ 'sidebar-collapsed': sidebarCollapsed, 'allow-transition': completedInitialRender }">
 				<span ng-click="toggleSidebar()" class="fa fa-caret-left collapse-control" collapse-control data-target="#dashboardSidebar"></span>
-				<div ng-if="isSmartThings" class="alert alert-danger">
-					<div class="container-fluid" style="max-width: 1000px;">
-						<p class="h2">
-							SmartThings will shut down your webCoRE automations and all other groovy-based SmartApps 
-							<a href="https://community.smartthings.com/t/update-to-smartthings-groovy-transition/254856" target="_blank" class="alert-link">sometime in early 2023</a>. 
-						</p>
-						<div style="color: #444">
-							<p class="lead">
-								Please use the red snapshot button to save a screenshot of each piston for your reference.
-							</p>
-							Those who wish to remain with SmartThings will need to manually convert pistons to Routines in the SmartThings app or migrate to a service like SharpTools or ActionTiles that works with the limited capabilities of the new SmartThings architecture.
-							There are no solutions for SmartThings that are fully compatible with the complex automations supported by webCoRE pistons so this path may require significant compromises.
-							<br><br>
-							<strong>webCoRE is supported on the Hubitat Elevation hub</strong>, an alternative to SmartThings, and has been maintained by that community for several years.
-							Use the <strong>Backup Piston(s)</strong> tool in the side menu to download a password protected backup of your pistons that can be restored if you choose to install webCoRE on a Hubitat Elevation smart home hub. 
-							This is the <strong>only way to preserve your pistons</strong> if you decide to migrate from SmartThings to Hubitat Elevation (i.e. automatic backup bin codes will not work). 
-							Migration to Hubitat requires a new hub and pairing all devices but may be much easier than redesigning your automations from scratch with SmartThings.
-							<a href="https://community.hubitat.com/t/webcore-documentation-digest/88285" target="_blank" rel="noreferrer noopener" class="alert-link">Learn more about webCoRE on Hubitat</a>
-						</div>
-					</div>
-				</div>
 				<div lonely ng-if="!loading && !instance.pistons.length">
 					<i class="far fa-frown"></i>
 					<div>It's kinda lonely in here...<br/>How about <a ng-click="newPiston();">creating a piston</a>?</div>
@@ -352,7 +331,7 @@
 							{{pistonRow.bin}}
 						</code>
 						<span ng-if="!showBins" class="{{pistonRow.bin ? 'text-success s-b' : ''}}">
-							<i class="fal fa-{{pistonRow.bin ? 'check' : 'times'}}"></i>
+							<i class="fas fa-{{pistonRow.bin ? 'check' : 'times'}}"></i>
 							{{pistonRow.bin ? 'Enabled' : 'Disabled'}}
 						</span>
 					</td>
@@ -495,7 +474,7 @@
               <div class="btn-group btn-group-sm pull-right">
                 <button class="btn btn-sm" ng-class="data.imported ? 'btn-secondary' : 'btn-primary'" ng-click="restoreImportedPiston(data)">Restore {{data.imported ? ' again' : ''}}</button>
                 <button type="button" class="btn btn-sm btn-primary" ng-show="!!data.imported" ng-click="openPiston(data.imported); closeDialog()">View</button>
-                <button type="button" class="btn btn-sm btn-white" ng-click="removeImportedPiston(data.meta.id)"><i class="far fa-times fa-sm"></i></button>
+                <button type="button" class="btn btn-sm btn-white" ng-click="removeImportedPiston(data.meta.id)"><i class="fas fa-times fa-sm"></i></button>
               </div>
               <strong>{{data.meta.name}}</strong>
               <div ng-if="data.warnings && data.warnings.length" class="text-warning">
@@ -547,8 +526,8 @@
 			<div>
 				<label>WHAT IS NOT INCLUDED IN THE DATA:</label>
 				<ul>
-					<li>Any SmartThings GUIDs - these are identifiers used by SmartThings to reference your devices, modes, contacts, etc. CoRE hashes them into unique codes that are only understandable by CoRE.</li>
-					<li>Any security access tokens used by CoRE to communicate with SmartThings</li>
+					<li>Any Hubitat GUIDs - these are identifiers used by Hubitat to reference your devices, modes, contacts, etc. CoRE hashes them into unique codes that are only understandable by CoRE.</li>
+					<li>Any security access tokens used by CoRE to communicate with Hubitat</li>
 				</ul>
 			</div>
 			<div class="danger">

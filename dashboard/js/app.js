@@ -57,7 +57,7 @@ function getHubId() {
 // and query string (callback, access_token, token, ...):
 //   cloud:  https://cloud.hubitat.com/api/<hubId>/apps/<appId>/<path>?<query>
 //   local:  <localApiBase>/apps/api/<appId>/<path>?<query>
-// Non-Hubitat URLs (e.g. SmartThings) and unrecognized URLs are returned as-is.
+// Non-Hubitat and unrecognized URLs are returned as-is.
 function rewriteHubApi(url) {
 	if (typeof url !== 'string') return url;
 	var cloud = url.match(/^https?:\/\/[^\/]*hubitat\.com\/api\/([^\/?]+)\/apps\/([^\/?]+)\/(.*)$/i);
@@ -803,11 +803,11 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		if ((instance.coreVersion) && coreVersionComparison !== 0 && !nagged) {
 			nagged = true;
 			if (compareVersions(minCoreVersion, instance.coreVersion) > 0) {
-				status('A newer SmartApp version (' + version() + ') is available.<br><strong>Please update and publish all the webCoRE SmartApps in the SmartThings IDE.</strong>', true);
+				status('A newer webCoRE app version (' + version() + ') is available.<br><strong>Please update the webCoRE app on your Hubitat hub (e.g. via Hubitat Package Manager).</strong>', true);
 			} else if (coreVersionComparison > 0) {
 				localforage.getItem('lastOptionalVersion').then(function(lastOptionalVersion) {
 					if (lastOptionalVersion !== version()) {
-						status('A newer SmartApp version (' + version() + ') is available.<br>This is an <strong>optional</strong> update; consider updating the webCoRE SmartApps in the SmartThings IDE.', true);
+						status('A newer webCoRE app version (' + version() + ') is available.<br>This is an <strong>optional</strong> update; consider updating the webCoRE app on your Hubitat hub (e.g. via Hubitat Package Manager).', true);
 						localforage.setItem('lastOptionalVersion', version());
 					}
 				});
@@ -847,7 +847,7 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 			var iid = instance.id;
 			var si = store[instance.id];
 			if (!si) si = {};
-			var region = (si && si.uri && si.uri.startsWith('https://graph-eu')) ? 'eu' : 'us';
+			var region = 'us';
 			ws = new WebSocket('wss://api-' + region + '-' + iid[32] + '.webcore.co:9297');
 			ws.onopen = function(evt) {
 				ws.send(instance.id)
@@ -1045,12 +1045,6 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 							var appid = parts[1].substr(32);
 							uri = 'https://' + parts[0] + '/api/' + uid.substr(0, 8) + '-' + uid.substr(8, 4) + '-' + uid.substr(12, 4) + '-' + uid.substr(16, 4) + '-' + uid.substr(20, 12) + '/apps/' + appid;
 						}
-					} else {
-						if (uri && !(uri instanceof Object) && (uri.length >= 69)) {
-							var host = uri.substr(0, uri.length - 64);
-							if (!host.endsWith('.com')) host += '.api.smartthings.com';
-							uri = uri.substr(0, 8) == 'https://' ? uri : 'https://' + host + '/api/token/' + uri.substr(-64, 8) + '-' + uri.substr(-56, 4) + '-' + uri.substr(-52, 4) + '-' + uri.substr(-48, 4) + '-' + uri.substr(-44, 12) +  '/smartapps/installations/' + uri.substr(-32, 8) + '-' + uri.substr(-24, 4) + '-' + uri.substr(-20, 4) + '-' + uri.substr(-16, 4) + '-' + uri.substr(-12) + '/';
-						}
 					}
 				}
 				si = fixSI({uri: uri});
@@ -1074,8 +1068,8 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		if (!si) {
 			$location.path('/register');
 		} else {
-			$rootScope.isSmartThings = si.uri.indexOf('things') > 0;
-			$rootScope.platformCode = $rootScope.isSmartThings ? 'st' : 'he';
+			$rootScope.isSmartThings = false;
+			$rootScope.platformCode = 'he';
 			var error = document.getElementById('error');
 			if (error) error.parentNode.removeChild(error);
 		}
@@ -1159,15 +1153,15 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 	}
 
 	// Classifies the active instance's endpoint as 'Cloud' or 'Local' based on
-	// its API host. Vendor clouds (hubitat.com / smartthings) are Cloud; any
-	// other host (a LAN IP or a local reverse proxy) is treated as Local.
+	// its API host. The Hubitat cloud (hubitat.com) is Cloud; any other host
+	// (a LAN IP or a local reverse proxy) is treated as Local.
 	dataService.getEndpointType = function() {
 		var uri = dataService.getApiUri();
 		if (!uri || (typeof uri !== 'string')) return '';
 		var m = uri.match(/^https?:\/\/([^\/:]+)/i);
 		var host = m ? m[1] : '';
 		if (!host) return '';
-		if (/(^|\.)hubitat\.com$/i.test(host) || /(^|\.)smartthings\.com$/i.test(host) || /(^|\.)api\.smartthings\.com$/i.test(host)) return 'Cloud';
+		if (/(^|\.)hubitat\.com$/i.test(host)) return 'Cloud';
 		return 'Local';
 	}
 
@@ -1639,7 +1633,7 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 			var iid = inst.id;
 			var si = store[inst.id];
 			if (!si) si = {};
-			var region = (si && si.uri && si.uri.startsWith('https://graph-eu')) ? 'eu' : 'us';
+			var region = 'us';
 			var req = {
 				method: 'POST',
 				url: 'https://api-' + region + '-' + iid[32] + '.webcore.co:9287/user/login',
@@ -1650,7 +1644,7 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 			}
 			return $http(req).then(function(response) {
 				var data = response.data;
-				store = JSON.parse('{}');//":e1d1f849bf093663be65a380fc6343b3:":{"uri":"https://graph.api.smartthings.com/api/token/7652e3a4-0b1d-4149-8db1-904926b5c1ea/smartapps/installations/3d488355-c7d4-47e5-839c-9f5d5530881f/"},":8d5d2f31e563841c1c95b6b73a6c8b25:":{"uri":"https://graph.api.smartthings.com/api/token/a6f2dfd4-b91b-4bbe-b900-757ad5e6c7a9/smartapps/installations/e035fa0e-0671-406a-9483-d89b15ac3c1b/"}}');
+				store = JSON.parse('{}');
 				for (x in store) {
 				    if (!instances[x] || !instances[x].account) {
 					instances[x] = {id: x, name: 'Unknown', locationId: '?'};
