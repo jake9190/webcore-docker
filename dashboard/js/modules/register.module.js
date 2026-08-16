@@ -9,9 +9,8 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 	$scope.showLocalEndpoint = false;
 	// Bound via an object so the input inside ng-if resolves to this same model
 	// (ng-if creates a child scope; primitives on $scope would not two-way bind).
-	// getLocalApiBase() lives in app.js; guard it so a stale/mismatched app.js
-	// can't throw here and take down the whole controller (and the Angular view).
-	$scope.localEndpoint = { base: (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '') };
+	// Start blank so a new registration isn't pre-filled with any stored value.
+	$scope.localEndpoint = { base: '' };
 
 	$scope.toggleLocalEndpoint = function() {
 		$scope.showLocalEndpoint = !$scope.showLocalEndpoint;
