@@ -916,8 +916,10 @@ ul.nav.nav-pills {
 	border-right-width: 0;
 }
 
-.nav-sidebar > li > a:hover {
+.nav-sidebar > li > a:hover,
+.nav-sidebar > li > a:focus {
 	background-color: var(--table-hover-background);
+	color: var(--text-color);
 }
 
 
