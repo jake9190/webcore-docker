@@ -1177,7 +1177,8 @@ button .btn .btn-default active{
 .ngdialog .bootstrap-select > .dropdown-toggle:focus,
 .ngdialog .bootstrap-select > .dropdown-toggle:active,
 .ngdialog .toggle.btn,
-.ngdialog .toggle.btn .toggle-off.btn {
+.ngdialog .toggle.btn .toggle-off.btn,
+.ngdialog span.form-control.btn-default {
     background-color: #fff !important;
     color: #333;
 }
