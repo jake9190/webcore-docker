@@ -32,6 +32,8 @@
             <ul class="dropdown-menu">
               <li role="separator" class="dropdown-header" ng-repeat-start="l in locations" ng-init="instances = listInstances(l.id)">{{l.name}}</li>
             	<li instance ng-repeat="i in instances" ng-repeat-end ng-click="switchInstance(i.id);"><a><checkbox checked="i.id == instance.id" radio="true" icon-class="fa-lg fa-fw"></checkbox> {{l.name}} \ {{i.name}} ({{i.coreVersion.split('.').splice(0,3).join('.')}})</a></li>
+              <li role="separator" class="divider" ng-if="!isSmartThings"></li>
+              <li ng-if="!isSmartThings" ng-click="toggleEndpoint();"><a><i class="fa fa-fw fa-exchange-alt"></i> Endpoint: {{endpointType()}} <small>(switch to {{endpointType() == 'Local' ? 'Cloud' : 'Local'}})</small></a></li>
             </ul>
         </li>
 			</ul>
@@ -224,16 +226,32 @@
 
     <div class="tab-content clearfix">
       <div class="tab-pane" id="general">
-			<panel name="Local endpoint override">
-				<p>Route dashboard API traffic directly to your hub or a local reverse proxy instead of the Hubitat cloud. Enter the base URL only (no path), e.g. <code>https://hubitat.domain.com</code>. Leave blank to use the cloud / registered endpoint.</p>
+			<panel name="Hub endpoint">
+				<p>Choose whether all hub calls go through the Hubitat cloud or a local endpoint (your hub or a local reverse proxy). You can also switch quickly from the instance menu at the top.</p>
+				<div class="form-group row">
+					<label class="control-label col-sm-3">Endpoint</label>
+					<div class="col-sm-9">
+						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="cloud"/> Cloud</label>
+						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="local"/> Local</label>
+						<span class="help-block">Currently using: <b>{{endpointType()}}</b></span>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label class="control-label col-sm-3">Hub ID</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" ng-model="hubId" placeholder="00000000-0000-0000-0000-000000000000"/>
+						<span class="help-block">The Hubitat cloud hub id (the GUID from a cloud URL: <code>cloud.hubitat.com/api/&lt;hubId&gt;/apps/…</code>). Required to use the cloud endpoint when you registered with a local URL. Auto-filled if you registered via the cloud.</span>
+					</div>
+				</div>
 				<div class="form-group row">
 					<label class="control-label col-sm-3">Local API base URL</label>
 					<div class="col-sm-9">
 						<input type="text" class="form-control" ng-model="localApiBase" placeholder="https://hubitat.domain.com"/>
+						<span class="help-block">Base URL only (no path), e.g. <code>https://hubitat.domain.com</code> or <code>http://192.168.1.20</code>. Required to use the local endpoint.</span>
 					</div>
 				</div>
 				<div class="text-right">
-					<button class="btn btn-info" ng-click="saveLocalApiBase()">Save local endpoint</button>
+					<button class="btn btn-info" ng-click="saveEndpointSettings()">Save endpoint</button>
 				</div>
 			</panel>
 	</div>

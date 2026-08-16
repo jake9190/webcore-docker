@@ -29,29 +29,51 @@ function getLocalApiBase() {
 	return localApiBase ? localApiBase.trim() : '';
 }
 
-// Rewrites a Hubitat cloud API URL to the configured local endpoint, preserving
-// the app id, request path and query string (including access_token).
-//   cloud:  https://cloud.hubitat.com/api/<hubUID>/apps/<appId>/<path>?<query>
-//   local:  <localApiBase>/apps/api/<appId>/<path>?<query>
-// Non-Hubitat (e.g. SmartThings) and unrecognized URLs are returned unchanged.
-function rewriteToLocalApi(url) {
-	var base = getLocalApiBase();
-	if (!base || (typeof url !== 'string')) return url;
-	var m = url.match(/^https?:\/\/[^\/]*hubitat\.com\/api\/[^\/]+\/apps\/([^\/?]+)\/(.*)$/i);
-	if (!m) return url;
-	return base.replace(/\/+$/, '') + '/apps/api/' + m[1] + '/' + m[2];
+// Selected endpoint for Hubitat hub calls: 'cloud' or 'local'. Stored in
+// localStorage; defaults to local when a local base is configured, else cloud.
+function getEndpointMode() {
+	try {
+		var m = window.localStorage.getItem('webcore:endpointMode');
+		if (m === 'local' || m === 'cloud') return m;
+	} catch (e) {}
+	return getLocalApiBase() ? 'local' : 'cloud';
 }
 
-// Forces the origin (scheme://host[:port]) of an absolute endpoint URL to the
-// configured local base, keeping the path/query. The hub reports its own local
-// endpoint (e.g. http://192.168.1.xxx/apps/api/7/) in the dashboard/load
-// response; when a local base is configured we replace that origin so the
-// dashboard keeps talking to the endpoint the user specified (e.g. an https
-// reverse proxy) instead of the hub's self-reported http LAN address.
-function applyLocalApiBase(uri) {
-	var base = getLocalApiBase();
-	if (!base || (typeof uri !== 'string') || !/^https?:\/\//i.test(uri)) return uri;
-	return uri.replace(/^https?:\/\/[^\/]+/i, base.replace(/\/+$/, ''));
+// The Hubitat cloud hub id (cloud UID GUID) used to build cloud endpoint URLs.
+// Required to use the cloud endpoint when the instance was registered with a
+// local URL (which does not contain it). Stored in localStorage; may be entered
+// in Settings > General or auto-captured from a cloud registration.
+function getHubId() {
+	try {
+		var h = window.localStorage.getItem('webcore:hubId');
+		if (h) return h.trim();
+	} catch (e) {}
+	return '';
+}
+
+// Rewrites a Hubitat hub API URL to the selected endpoint (cloud or local) so
+// every hub call honours the chosen mode regardless of how the instance was
+// registered. Recognises both endpoint shapes and preserves the app id, path
+// and query string (callback, access_token, token, ...):
+//   cloud:  https://cloud.hubitat.com/api/<hubId>/apps/<appId>/<path>?<query>
+//   local:  <localApiBase>/apps/api/<appId>/<path>?<query>
+// Non-Hubitat URLs (e.g. SmartThings) and unrecognized URLs are returned as-is.
+function rewriteHubApi(url) {
+	if (typeof url !== 'string') return url;
+	var cloud = url.match(/^https?:\/\/[^\/]*hubitat\.com\/api\/([^\/?]+)\/apps\/([^\/?]+)\/(.*)$/i);
+	var local = url.match(/^https?:\/\/[^\/]+\/apps\/api\/([^\/?]+)\/(.*)$/i);
+	var appId, tail, urlHubId = null;
+	if (cloud) { urlHubId = cloud[1]; appId = cloud[2]; tail = cloud[3]; }
+	else if (local) { appId = local[1]; tail = local[2]; }
+	else return url;
+	if (getEndpointMode() === 'local') {
+		var base = getLocalApiBase();
+		if (!base) return url;
+		return base.replace(/\/+$/, '') + '/apps/api/' + appId + '/' + tail;
+	}
+	var hubId = getHubId() || urlHubId;
+	if (!hubId) return url;
+	return 'https://cloud.hubitat.com/api/' + hubId + '/apps/' + appId + '/' + tail;
 }
 
 
@@ -557,10 +579,10 @@ var config = app.config(['$routeProvider', '$locationProvider', '$sceDelegatePro
 
 	$httpProvider.interceptors.push(['$location', '$injector', '$q', function($location, $injector, $q) {
 		return {
-			// Redirect Hubitat cloud API calls to the configured local endpoint
+			// Route every hub API call to the selected endpoint (cloud or local)
 			'request': function(config) {
 				if (config && config.url) {
-					config.url = rewriteToLocalApi(config.url);
+					config.url = rewriteHubApi(config.url);
 				}
 				return config;
 			},
@@ -718,10 +740,15 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		var si = store[inst.id];
 		if (!si) si = {};
 		si.token = inst.token ? inst.token : si.token;
-		// The hub reports its own local endpoint in inst.uri; force it back to
-		// the user-specified local base (if any) so we don't switch to the hub's
-		// self-reported http LAN address.
-		si.uri = inst.uri ? applyLocalApiBase(inst.uri.replace(':443', '')) : si.uri;
+		// Store the endpoint as registered (canonical). The $http interceptor
+		// (rewriteHubApi) redirects each call to the selected cloud/local endpoint.
+		si.uri = inst.uri ? inst.uri.replace(':443', '') : si.uri;
+		// Auto-capture the cloud hub id from a cloud endpoint so it is available
+		// for building cloud URLs (and pre-filled in Settings) later.
+		try {
+			var hm = (si.uri || '').match(/hubitat\.com\/api\/([^\/?]+)\/apps\//i);
+			if (hm && hm[1] && !getHubId()) window.localStorage.setItem('webcore:hubId', hm[1]);
+		} catch (e) {}
 		store[inst.id] = fixSI(si);
 	}
 
@@ -1120,7 +1147,15 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 	dataService.getApiUri = function() {
 		var inst = dataService.getInstance();
 		si = store ? store[inst.id] : null;
-		return si ? si.uri : null;		
+		return si ? rewriteHubApi(si.uri) : null;		
+	}
+
+	// The endpoint exactly as registered (before cloud/local rewriting). Used to
+	// tell whether a cloud hub id is already known from the registration URL.
+	dataService.getRawApiUri = function() {
+		var inst = dataService.getInstance();
+		si = store ? store[inst.id] : null;
+		return si ? si.uri : null;
 	}
 
 	// Classifies the active instance's endpoint as 'Cloud' or 'Local' based on

@@ -276,8 +276,10 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		$scope.settings = $scope.copy($scope.instance.settings);
 		$scope.settings.categories = $scope.getCategories();
 		$scope.settings.places = $scope.getPlaces();
-		// Current local endpoint override, for viewing/editing in Settings > General.
+		// Current endpoint configuration, for viewing/editing in Settings > General.
+		$scope.endpointMode = (typeof getEndpointMode === 'function' ? getEndpointMode() : 'cloud');
 		$scope.localApiBase = (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '');
+		$scope.hubId = (typeof getHubId === 'function' ? getHubId() : '');
 		$scope.refreshDebugDump();
 		$scope.view = 'settings';
 	};
@@ -320,19 +322,53 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		return (typeof dataService.getEndpointType === 'function') ? dataService.getEndpointType() : '';
 	};
 
-	// Persist the local endpoint override and reload so it applies to the
-	// stored instance (the hub-reported endpoint is rewritten to this base).
-	$scope.saveLocalApiBase = function() {
-		var v = ($scope.localApiBase || '').trim().replace(/\/+$/, '');
-		if (v && !/^https?:\/\//i.test(v)) {
-			alert('Local endpoint must start with http:// or https://');
+	// Persist the endpoint configuration (mode, hub id, local base) and reload so
+	// every hub call is routed to the selected endpoint.
+	$scope.saveEndpointSettings = function() {
+		var base = ($scope.localApiBase || '').trim().replace(/\/+$/, '');
+		var hubId = ($scope.hubId || '').trim();
+		var mode = ($scope.endpointMode === 'local') ? 'local' : 'cloud';
+		if (base && !/^https?:\/\//i.test(base)) {
+			alert('Local API base URL must start with http:// or https://');
+			return;
+		}
+		if (mode === 'local' && !base) {
+			alert('Enter a Local API base URL to use the local endpoint.');
 			return;
 		}
 		try {
-			if (v) window.localStorage.setItem('webcore:localApiBase', v);
+			window.localStorage.setItem('webcore:endpointMode', mode);
+			if (base) window.localStorage.setItem('webcore:localApiBase', base);
 			else window.localStorage.removeItem('webcore:localApiBase');
-			$scope.localApiBase = v;
+			if (hubId) window.localStorage.setItem('webcore:hubId', hubId);
+			else window.localStorage.removeItem('webcore:hubId');
 		} catch (e) {}
+		location.reload();
+	};
+
+	// Toggle between cloud and local endpoints (used from the instance switcher).
+	$scope.toggleEndpoint = function() {
+		var current = (typeof getEndpointMode === 'function') ? getEndpointMode() : 'cloud';
+		var mode = (current === 'local') ? 'cloud' : 'local';
+		if (mode === 'local') {
+			var base = (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '');
+			if (!base) {
+				$scope.showSettings();
+				alert('Set a Local API base URL in Settings > General to use the local endpoint.');
+				return;
+			}
+		} else {
+			var hubId = (typeof getHubId === 'function' ? getHubId() : '');
+			var rawUri = (typeof dataService.getRawApiUri === 'function') ? (dataService.getRawApiUri() || '') : '';
+			// Cloud needs a hub id; if none is known (entered or in the registered
+			// URL), guide the user to Settings.
+			if (!hubId && !/hubitat\.com\/api\//i.test(rawUri)) {
+				$scope.showSettings();
+				alert('Enter the Hub ID in Settings > General to use the cloud endpoint.');
+				return;
+			}
+		}
+		try { window.localStorage.setItem('webcore:endpointMode', mode); } catch (e) {}
 		location.reload();
 	};
 
