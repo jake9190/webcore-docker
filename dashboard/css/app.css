@@ -1169,13 +1169,7 @@ button .btn .btn-default active{
     background-color: #bdc3c7 !important;
 }
 
-/* In dialogs (e.g. Create/Duplicate piston) the bootstrap-select dropdown and
-   the toggle inherit the gray .btn background, which clashes with the white
-   .form-control inputs. Make them match the white inputs for a consistent look. */
-.ngdialog .bootstrap-select > .dropdown-toggle,
-.ngdialog .bootstrap-select > .dropdown-toggle:hover,
-.ngdialog .bootstrap-select > .dropdown-toggle:focus,
-.ngdialog .bootstrap-select > .dropdown-toggle:active,
+/* Keep dialog toggles and read-only fields aligned with white inputs. */
 .ngdialog .toggle.btn,
 .ngdialog .toggle.btn .toggle-off.btn,
 .ngdialog span.form-control.btn-default {
