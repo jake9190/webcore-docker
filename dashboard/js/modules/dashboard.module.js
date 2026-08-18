@@ -326,8 +326,8 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 
 	// Persist the endpoint configuration (mode, hub id, local base) and reload so
 	// every hub call is routed to the selected endpoint.
-	$scope.saveEndpointSettings = function() {
-		var endpointSettings = $scope.endpointSettings || {};
+	$scope.saveEndpointSettings = function(endpointSettings) {
+		endpointSettings = endpointSettings || $scope.endpointSettings || {};
 		var base = (endpointSettings.localApiBase || '').trim().replace(/\/+$/, '');
 		var hubId = (endpointSettings.hubId || '').trim();
 		var mode = (endpointSettings.mode === 'local') ? 'local' : 'cloud';
@@ -345,7 +345,16 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 			else window.localStorage.removeItem('webcore:localApiBase');
 			if (hubId) window.localStorage.setItem('webcore:hubId', hubId);
 			else window.localStorage.removeItem('webcore:hubId');
-		} catch (e) {}
+			if ((window.localStorage.getItem('webcore:localApiBase') || '') !== base) {
+				throw new Error('Local API base URI was not persisted.');
+			}
+		} catch (e) {
+			alert('Unable to save endpoint settings: ' + (e && e.message ? e.message : e));
+			return;
+		}
+		endpointSettings.mode = mode;
+		endpointSettings.localApiBase = base;
+		endpointSettings.hubId = hubId;
 		location.reload();
 	};
 
