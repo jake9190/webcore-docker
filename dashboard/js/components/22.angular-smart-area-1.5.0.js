@@ -118,10 +118,23 @@ angular.module('smartArea', [])
             textArea.appendTo(mainWrap).addClass('sa-realArea').attr('ng-trim',false);
             $compile(textArea);
 
-            // Dirty hack to maintain the height
+            function syncHeight() {
+                scope.fakeAreaElement.css('height', textArea.css('height'));
+            }
+
             textArea.on('keyup', function(){
-                scope.fakeAreaElement.height(textArea.height());
+                syncHeight();
             });
+
+            if (window.MutationObserver) {
+                var heightObserver = new MutationObserver(function() {
+                    syncHeight();
+                });
+                heightObserver.observe(textArea[0], {attributes: true, attributeFilter: ['style']});
+                scope.$on('$destroy', function() {
+                    heightObserver.disconnect();
+                });
+            }
 
             return mainWrap;
         },
