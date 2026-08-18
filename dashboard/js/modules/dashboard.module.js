@@ -277,9 +277,11 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		$scope.settings.categories = $scope.getCategories();
 		$scope.settings.places = $scope.getPlaces();
 		// Current endpoint configuration, for viewing/editing in Settings > General.
-		$scope.endpointMode = (typeof getEndpointMode === 'function' ? getEndpointMode() : 'cloud');
-		$scope.localApiBase = (typeof getLocalApiBase === 'function' ? getLocalApiBase() : '');
-		$scope.hubId = (typeof getHubId === 'function' ? getHubId() : '');
+		$scope.endpointSettings = {
+			mode: (typeof getEndpointMode === 'function' ? getEndpointMode() : 'cloud'),
+			localApiBase: (typeof getLocalApiBase === 'function' ? getLocalApiBase() : ''),
+			hubId: (typeof getHubId === 'function' ? getHubId() : '')
+		};
 		$scope.refreshDebugDump();
 		$scope.view = 'settings';
 	};
@@ -325,9 +327,10 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 	// Persist the endpoint configuration (mode, hub id, local base) and reload so
 	// every hub call is routed to the selected endpoint.
 	$scope.saveEndpointSettings = function() {
-		var base = ($scope.localApiBase || '').trim().replace(/\/+$/, '');
-		var hubId = ($scope.hubId || '').trim();
-		var mode = ($scope.endpointMode === 'local') ? 'local' : 'cloud';
+		var endpointSettings = $scope.endpointSettings || {};
+		var base = (endpointSettings.localApiBase || '').trim().replace(/\/+$/, '');
+		var hubId = (endpointSettings.hubId || '').trim();
+		var mode = (endpointSettings.mode === 'local') ? 'local' : 'cloud';
 		if (base && !/^https?:\/\//i.test(base)) {
 			alert('Local API base URL must start with http:// or https://');
 			return;

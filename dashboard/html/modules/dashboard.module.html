@@ -210,22 +210,22 @@
 				<div class="form-group row">
 					<label class="control-label col-sm-3">Endpoint</label>
 					<div class="col-sm-9">
-						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="cloud"/> Cloud</label>
-						<label class="radio-inline"><input type="radio" ng-model="endpointMode" value="local"/> Local</label>
+						<label class="radio-inline"><input type="radio" ng-model="endpointSettings.mode" value="cloud"/> Cloud</label>
+						<label class="radio-inline"><input type="radio" ng-model="endpointSettings.mode" value="local"/> Local</label>
 						<span class="help-block">Currently using: <b>{{endpointType()}}</b></span>
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="control-label col-sm-3">Hub ID</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="hubId" placeholder="00000000-0000-0000-0000-000000000000"/>
+						<input type="text" class="form-control" ng-model="endpointSettings.hubId" placeholder="00000000-0000-0000-0000-000000000000"/>
 						<span class="help-block">The Hubitat cloud hub id (the GUID from a cloud URL: <code>cloud.hubitat.com/api/&lt;hubId&gt;/apps/…</code>). Required to use the cloud endpoint when you registered with a local URL. Auto-filled if you registered via the cloud.</span>
 					</div>
 				</div>
 				<div class="form-group row">
 					<label class="control-label col-sm-3">Local API base URL</label>
 					<div class="col-sm-9">
-						<input type="text" class="form-control" ng-model="localApiBase" placeholder="https://hubitat.domain.com"/>
+						<input type="text" class="form-control" ng-model="endpointSettings.localApiBase" placeholder="https://hubitat.domain.com"/>
 						<span class="help-block">Base URL only (no path), e.g. <code>https://hubitat.domain.com</code> or <code>http://192.168.1.20</code>. Required to use the local endpoint.</span>
 					</div>
 				</div>
