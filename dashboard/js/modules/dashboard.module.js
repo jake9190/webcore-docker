@@ -282,10 +282,11 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 		$scope.settings.categories = $scope.getCategories();
 		$scope.settings.places = $scope.getPlaces();
 		// Current endpoint configuration, for viewing/editing in Settings > General.
+		var rawUri = (typeof dataService.getRawApiUri === 'function') ? (dataService.getRawApiUri() || '') : '';
 		$scope.endpointSettings = {
 			mode: (typeof getEndpointMode === 'function' ? getEndpointMode() : 'cloud'),
 			localApiBase: (typeof getLocalApiBase === 'function' ? getLocalApiBase() : ''),
-			hubId: (typeof getHubId === 'function' ? getHubId() : '')
+			hubId: (typeof getHubId === 'function' ? getHubId(rawUri) : '')
 		};
 		$scope.refreshDebugDump();
 		$scope.view = 'settings';
@@ -375,8 +376,8 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 				return;
 			}
 		} else {
-			var hubId = (typeof getHubId === 'function' ? getHubId() : '');
 			var rawUri = (typeof dataService.getRawApiUri === 'function') ? (dataService.getRawApiUri() || '') : '';
+			var hubId = (typeof getHubId === 'function' ? getHubId(rawUri) : '');
 			// Cloud needs a hub id; if none is known (entered or in the registered
 			// URL), guide the user to Settings.
 			if (!hubId && !/hubitat\.com\/api\//i.test(rawUri)) {
