@@ -12,6 +12,18 @@ Quick start
 
 Then open http://localhost:8090
 
+Endpoint to Hub ID mapping
+--------------------------
+Set `WEBCORE_ENDPOINT_HUB_ID_MAP` to a JSON object when a local endpoint needs
+to be associated with its Hubitat cloud Hub ID. Endpoint matching ignores case
+and trailing slashes. Browser settings entered under Settings > General take
+precedence over this mapping.
+
+  WEBCORE_ENDPOINT_HUB_ID_MAP={"https://hubitat.example.com":"00000000-0000-0000-0000-000000000000"} docker compose up -d --build
+
+Multiple endpoints may be included in the same JSON object. With `docker run`,
+pass the value using `-e WEBCORE_ENDPOINT_HUB_ID_MAP=...`.
+
 The dashboard is an AngularJS HTML5-mode single-page app served from the site
 root. Deep links / refreshes are handled by dashboard/.htaccess (mod_rewrite),
 which is enabled in the Dockerfile.

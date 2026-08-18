@@ -1,0 +1,1 @@
+window.webcoreConfig = window.webcoreConfig || { endpointHubIds: {} };
