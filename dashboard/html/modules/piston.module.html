@@ -166,7 +166,8 @@
 					<p>Subscriptions: {{subscriptions.events ? subscriptions.events : 'no'}} event{{subscriptions.events != 1 ? 's' : ''}}, {{subscriptions.controls ? subscriptions.controls : 'no'}} control{{subscriptions.controls != 1 ? 's' : ''}}</p>
 					<p>Devices used: {{subscriptions.devices ? subscriptions.devices : 'none'}}</p>
 					<p>Memory used: {{memory ? memory : 'unknown'}}</p>
-					<p>External URL: <a href="{{endpoint}}" target="_blank">(click to open/execute)</a></p>
+					<p>Local execution URL: <a ng-if="localEndpoint" ng-href="{{localEndpoint}}" target="_blank">(click to open/execute)</a><span ng-if="!localEndpoint">not configured</span></p>
+					<p>Cloud execution URL: <a ng-if="cloudEndpoint" ng-href="{{cloudEndpoint}}" target="_blank">(click to open/execute)</a><span ng-if="!cloudEndpoint">not configured</span></p>
 				</div>
 				</div>
 

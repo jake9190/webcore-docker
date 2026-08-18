@@ -218,7 +218,10 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		if ($scope.piston) $scope.loading = true;
 		dataService.getPiston($scope.pistonId, true).then(function (response) {
 			if ($scope.$$destroyed) return;
-			$scope.endpoint = data.endpoint + 'execute/' + $scope.pistonId + (si.accessToken ? '?access_token=' + si.accessToken : '');
+			var executeEndpoint = data.endpoint + 'execute/' + $scope.pistonId + (si.accessToken ? '?access_token=' + si.accessToken : '');
+			$scope.endpoint = rewriteHubApi(executeEndpoint);
+			$scope.localEndpoint = rewriteHubApi(executeEndpoint, 'local');
+			$scope.cloudEndpoint = rewriteHubApi(executeEndpoint, 'cloud');
 			try {
 				var showOptions = $scope.piston ? !!$scope.showOptions : false;
 				if (!response || !response.data || !response.data.piston) {

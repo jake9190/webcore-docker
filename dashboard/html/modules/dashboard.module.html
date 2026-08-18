@@ -273,9 +273,15 @@
 				<p><b>NOTE:</b> Please replace the :pistonId: portion with the actual ID of the piston you are trying to execute. Please note the piston has to be part of the instance you are calling with this endpoint. The piston ID can be found in the address bar when viewing the IP and is enclosed in between : characters. Please include those characters in the endpoint.</p>
 				<p>While not recommended, you can also use the piston name instead of a piston ID. Simply replace :pistonId: with the piston name, but be careful to URL encode the name. Typically, all spaces become %20</p>
 					<div class="form-group row">
-						<label class="control-label col-sm-3">webCoRE Execute Endpoint</label>
+						<label class="control-label col-sm-3">Local Execute Endpoint</label>
 						<div class="col-sm-9">
-							<input type="text" class="form-control" ng-model="endpoint" readonly>
+							<input type="text" class="form-control" ng-model="localEndpoint" placeholder="Configure a Local API base URL in General settings" readonly>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="control-label col-sm-3">Cloud Execute Endpoint</label>
+						<div class="col-sm-9">
+							<input type="text" class="form-control" ng-model="cloudEndpoint" placeholder="Configure a Hub ID in General settings" readonly>
 						</div>
 					</div>
 			</panel>

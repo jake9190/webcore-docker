@@ -13,6 +13,8 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 	$scope.requestId = 0;
 	$scope.dropDownMenu = false;
 	$scope.endpoint = '';
+	$scope.localEndpoint = '';
+	$scope.cloudEndpoint = '';
 	$scope.rawEndpoint = '';
 	$scope.categories = [];
 	$scope.pausedPistons = [];
@@ -39,7 +41,10 @@ config.controller('dashboard', ['$scope', '$rootScope', 'dataService', '$timeout
 				if ($scope.$$destroyed) return;
 				if (currentRequestId != $scope.requestId) { return };
 				if (data) {
-					$scope.endpoint=data.endpoint + 'execute/:pistonId:' + (data.accessToken ? '?access_token=' + data.accessToken : '');
+					var executeEndpoint = data.endpoint + 'execute/:pistonId:' + (data.accessToken ? '?access_token=' + data.accessToken : '');
+					$scope.endpoint = rewriteHubApi(executeEndpoint);
+					$scope.localEndpoint = rewriteHubApi(executeEndpoint, 'local');
+					$scope.cloudEndpoint = rewriteHubApi(executeEndpoint, 'cloud');
 					$scope.rawEndpoint=data.endpoint;
 					$scope.rawAccessToken=data.accessToken;
 					if (data.error) {

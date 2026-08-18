@@ -57,8 +57,9 @@ function getHubId() {
 // and query string (callback, access_token, token, ...):
 //   cloud:  https://cloud.hubitat.com/api/<hubId>/apps/<appId>/<path>?<query>
 //   local:  <localApiBase>/apps/api/<appId>/<path>?<query>
-// Non-Hubitat and unrecognized URLs are returned as-is.
-function rewriteHubApi(url) {
+// Non-Hubitat and unrecognized URLs are returned as-is. When endpointMode is
+// supplied, an empty string means that route is not configured.
+function rewriteHubApi(url, endpointMode) {
 	if (typeof url !== 'string') return url;
 	var cloud = url.match(/^https?:\/\/[^\/]*hubitat\.com\/api\/([^\/?]+)\/apps\/([^\/?]+)\/(.*)$/i);
 	var local = url.match(/^https?:\/\/[^\/]+\/apps\/api\/([^\/?]+)\/(.*)$/i);
@@ -66,13 +67,15 @@ function rewriteHubApi(url) {
 	if (cloud) { urlHubId = cloud[1]; appId = cloud[2]; tail = cloud[3]; }
 	else if (local) { appId = local[1]; tail = local[2]; }
 	else return url;
-	if (getEndpointMode() === 'local') {
+	var explicitMode = endpointMode === 'local' || endpointMode === 'cloud';
+	var mode = explicitMode ? endpointMode : getEndpointMode();
+	if (mode === 'local') {
 		var base = getLocalApiBase();
-		if (!base) return url;
+		if (!base) return explicitMode ? '' : url;
 		return base.replace(/\/+$/, '') + '/apps/api/' + appId + '/' + tail;
 	}
 	var hubId = getHubId() || urlHubId;
-	if (!hubId) return url;
+	if (!hubId) return explicitMode ? '' : url;
 	return 'https://cloud.hubitat.com/api/' + hubId + '/apps/' + appId + '/' + tail;
 }
 
