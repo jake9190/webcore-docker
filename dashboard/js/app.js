@@ -917,6 +917,9 @@ config.factory('dataService', ['$http', '$location', '$rootScope', '$window', '$
 		instances = {};
 		storage = {};
 		store = {};
+		try {
+			window.localStorage.clear();
+		} catch (e) {}
 		return localforage.clear();
 	}
 
