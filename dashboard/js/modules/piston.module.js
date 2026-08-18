@@ -234,11 +234,12 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 				$scope.location = dataService.getLocation();
 				$scope.instance = dataService.getInstance();
 				$scope.view = dataService.loadFromStore('view') || {
-					variables: false,
+					variables: true,
 					elseIfs: false,
 					restrictions: false,
 					whens: false,
-					advancedStatements: false
+					advancedStatements: true,
+					movable: true
 				};
 				$scope.subscriptions = response.data.subscriptions ? response.data.subscriptions : {};
 				$scope.logs = response.data.logs ? response.data.logs : [];
