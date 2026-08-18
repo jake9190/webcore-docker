@@ -759,6 +759,17 @@ nav .title {
     display: block;
     margin-right: -32px;
 	text-align: left;
+	background: var(--background-featured);
+	border-color: var(--table-inactive-text);
+	color: var(--text-color);
+}
+
+nav .title:hover,
+nav .title:focus,
+nav .title:active {
+	background: var(--info-pane-bg);
+	border-color: var(--table-inactive-text);
+	color: var(--text-color);
 }
 
 statement,

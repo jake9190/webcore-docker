@@ -500,7 +500,7 @@
           </div>
           <div class="form-group">
 	            <label for="category">Category</label>
-                  <select id="category" class="form-control" ng-model="designer.category" ng-options="('' + category.i) as (category.n ? category.n : '(no name)') for category in designer.categories"></select>
+			  <select id="category" selectpicker class="selectpicker show-tick" data-width="100%" data-style="btn-default" ng-model="designer.category" data-mobile="{{mobile}}" ng-options="('' + category.i) as (category.n ? category.n : '(no name)') for category in designer.categories"></select>
           </div>
 		<div class="form-group" ng-if="designer.type=='duplicate'">
 			<label for="piston">Select the piston you want to duplicate</label>
