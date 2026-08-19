@@ -96,11 +96,9 @@ config.controller('register', ['$scope', '$rootScope', 'dataService', '$timeout'
 			} else {
 				window.localStorage.removeItem('webcore:localApiBase');
 			}
-			// Capture the cloud hub id from a Hubitat cloud URL so the cloud
-			// endpoint remains available after the hub reports its (local)
-			// endpoint on load, and so it can be pre-filled in Settings.
-			var hm = uri.match(/hubitat\.com\/api\/([^\/?]+)\/apps\//i);
-			if (hm && hm[1]) window.localStorage.setItem('webcore:hubId', hm[1]);
+			// Capture hubuid from a local instance URL, or the hub id embedded in
+			// a Hubitat cloud URL, so cloud endpoint switching remains available.
+			if (typeof captureHubId === 'function') captureHubId(uri);
 			if (typeof getLocalApiBase === 'function') $scope.localEndpoint.base = getLocalApiBase();
 		} catch (e) {}
 

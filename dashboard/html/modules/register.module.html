@@ -27,12 +27,12 @@
 				<p class="text-muted advanced-help">
 					Connect directly to a Hubitat instance without a registration
 					code. Paste the webCoRE dashboard endpoint URL for your instance
-					(it ends with <code>?access_token=…</code>), or paste your
-					dashboard init link.
+					(including <code>access_token</code> and <code>hubuid</code>), or
+					paste your dashboard init link.
 				</p>
 				<div class="input-group input-group-lg">
 					<input name="instanceUri" class="form-control" type="text"
-						placeholder="https://cloud.hubitat.com/api/…/apps/…/?access_token=…" ng-model="instanceLogin.uri" />
+						placeholder="https://hubitat.domain.com/apps/api/7/?access_token=…&amp;hubuid=…" ng-model="instanceLogin.uri" />
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-primary" ng-disabled="!instanceLogin.uri" ng-click="loginWithInstance()">Log in</button>
 					</span>

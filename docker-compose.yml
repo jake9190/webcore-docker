@@ -4,8 +4,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    environment:
-      WEBCORE_ENDPOINT_HUB_ID_MAP: '${WEBCORE_ENDPOINT_HUB_ID_MAP:-{}}'
     restart: always
     #ports:
     #  - 8090:80

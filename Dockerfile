@@ -29,7 +29,6 @@ FROM httpd:2.4-alpine
 # Serve the minified dashboard/ folder produced by the minify stage.
 COPY --from=minify /build/dashboard/ /var/www/webcore/
 COPY webcore-apache.conf /usr/local/apache2/conf/webcore.conf
-COPY docker-entrypoint.sh /usr/local/bin/webcore-entrypoint
 
 # Enable the modules the dashboard needs:
 #   rewrite    -> dashboard/.htaccess HTML5-mode deep-link fallback
@@ -42,10 +41,8 @@ RUN sed -i \
       -e 's|^#\(LoadModule proxy_http_module .*\)|\1|' \
       -e 's|^#\(LoadModule headers_module .*\)|\1|' \
       conf/httpd.conf \
-    && printf '\nInclude conf/webcore.conf\n' >> conf/httpd.conf \
-    && chmod +x /usr/local/bin/webcore-entrypoint
+    && printf '\nInclude conf/webcore.conf\n' >> conf/httpd.conf
 
 EXPOSE 80
 
-  ENTRYPOINT ["webcore-entrypoint"]
-  CMD ["httpd-foreground"]
+CMD ["httpd-foreground"]
