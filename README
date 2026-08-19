@@ -6,6 +6,30 @@ dashboard/ folder in this repo. Everything is baked into the image at build
 time - there are no external files or host volumes to set up, so a fresh clone
 builds and runs as-is.
 
+Improvements from Public WebCoRE Interface
+-----------
+tl;dr App has been streamlined, bugs have been fixed, quality of life improvements, and now supports arbitrary endpoints (for use with reverse proxies). No changes are required in the Hubitat Apps.
+
+- Fix: Mobile experience is improved (drag and drop, right click works).
+- Fix: keep linebreaks on comments when displayed.
+- Fix: Ordering is retained when drag/drop of long lists.
+- Fix: Expression outputs now wrap so you can see everything and can also copy the output.
+- Fix: Device filter is retained after selecting a device in the device picker.
+- Fix: Expression editor no longer overflows and expands properly.
+- Fix: No scrollbar on left nav menu unless needed.
+- Feature: Variables can be duplicated.
+- Feature: Login without using the webcore code by directly providing the link, so there are zero external cloud dependencies.
+- Feature: Switch between local and cloud endpoints.
+- Feature: Show cloud and local execution URIs for each piston.
+- Feature: Set a default category and select the category you want the piston in during creation.
+- Feature: Supports arbitrary hubitat endpoints (e.g., use a reverse proxy). HTTP/HTTPS must match.
+- Feature: All dependencies are local (except piston backup).
+- Feature: Docker build now minifies all assets and runs on Alpine
+- Feature: Added debug view in settings to see all local state.
+- Feature: Enabled Variables, drag/drop and advanced statements by default.
+- Removed Google Ads, Google Maps, Dashboards, Fuel Streams and device list in piston editor.
+- Minor UX color improvements for consistency.
+
 Quick start
 -----------
     docker compose up -d --build
@@ -40,4 +64,3 @@ Notes
 - To proxy your local hub's API through this origin (same-origin, no CORS),
   edit webcore-apache.conf and uncomment / adjust the ProxyPass lines, then
   rebuild.
-

@@ -2401,11 +2401,6 @@ function initBootstrapSelect() {
 	$('select').selectpicker();
 }
 
-$(document).on('refreshed.bs.select', 'select[data-live-search="true"]', function () {
-	var picker = $(this).data('selectpicker');
-	if (picker && picker.$searchbox.val()) picker.$searchbox.trigger('input');
-});
-
 switch (navigator.platform) {
 	case 'iPhone':
 	case 'iPad':
