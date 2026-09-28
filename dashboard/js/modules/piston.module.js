@@ -592,12 +592,19 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 
 	var onDialogKeyDown = function(event) {
 		if (!event.ctrlKey || (event.which != 13 && event.keyCode != 13) || !ngDialog.getOpenDialogs().length) return;
-		event.preventDefault();
 		if ($scope.designer && typeof $scope.designer.ctrlEnter == 'function') {
+			event.preventDefault();
 			$scope.$applyAsync(function() {
 				$scope.designer.ctrlEnter();
 			});
+			return;
 		}
+		var dialogs = ngDialog.getOpenDialogs();
+		var dialog = $window.document.getElementById(dialogs[dialogs.length - 1]);
+		var submitButton = dialog && dialog.querySelector('.ngdialog-content footer button.btn-info:not(:disabled)');
+		if (!submitButton) return;
+		event.preventDefault();
+		submitButton.click();
 	};
 	$window.addEventListener('keydown', onDialogKeyDown, true);
 
