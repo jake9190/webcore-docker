@@ -590,6 +590,18 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		});
 	}
 
+	var onPistonKeyDown = function(event) {
+		if (!event.ctrlKey || (event.which != 83 && event.keyCode != 83) || $scope.mode != 'edit' || ngDialog.getOpenDialogs().length) return;
+		event.preventDefault();
+		$scope.$applyAsync(function() {
+			$scope.save();
+		});
+	};
+	$window.addEventListener('keydown', onPistonKeyDown);
+	$scope.$on('$destroy', function() {
+		$window.removeEventListener('keydown', onPistonKeyDown);
+	});
+
 	$scope.toggleDarkMode = function() {
 		colorSchemeService.toggleDarkMode();
 	}
@@ -1081,6 +1093,12 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		$scope.piston.o.ced = isNaN($scope.designer.commandDelay) ? 0 : parseInt($scope.designer.commandDelay);
 		$scope.piston.o.ish = $scope.designer.ignoreSslErrors ? 1 : 0;
 		$scope.closeDialog();
+	}
+
+	$scope.onDialogCtrlEnter = function(event, submit, enabled) {
+		if (!event.ctrlKey || (event.which != 13 && event.keyCode != 13)) return;
+		event.preventDefault();
+		if (enabled && typeof submit == 'function') submit();
 	}
 
 
@@ -3929,10 +3947,20 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 
 	$scope.refreshSelects = function(type) {
 		type = type || 'selectpicker';
+		var refreshSelects = function() {
+			$('select[' + type + ']').each(function() {
+				var select = $(this);
+				var picker = select.data('selectpicker');
+				var searchbox = picker && picker.$searchbox;
+				var search = searchbox && searchbox.val();
+				select.selectpicker('refresh');
+				if (searchbox && search) searchbox.val(search).trigger('input');
+			});
+		};
 		$scope.$$postDigest(function() {
-			$('select[' + type + ']').selectpicker('refresh');
+			refreshSelects();
 			$timeout(function() {
-				$('select[' + type + ']').selectpicker('refresh');
+				refreshSelects();
 				// Match smart-area height to backing textarea
 				$('textarea').trigger('keyup');
 			}, 0, false);

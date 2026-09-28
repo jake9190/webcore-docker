@@ -1307,7 +1307,7 @@
 
 
 <script type="text/ng-template" id="dialog-edit-condition">
-	<designer ng-if="designer.page==0">
+	<designer ng-if="designer.page==0" ng-keydown="onDialogCtrlEnter($event, updateCondition, false)">
 		<header>
 			<h3>Add a new condition</h3>
 		</header>
@@ -1347,7 +1347,7 @@
 		</footer>
 	</designer>
 
-	<designer ng-if="designer.page==1">
+	<designer ng-if="designer.page==1" ng-keydown="onDialogCtrlEnter($event, updateCondition, designer.type && ((designer.type != 'condition') || designer.comparison.valid))">
 		<header>
 			<h3 ng-if="designer.$new">Add a new {{designer.type}}</h3>
 			<h3 ng-if="!designer.$new">Edit {{designer.type}}</h3>
@@ -2092,7 +2092,7 @@
 
 
 <script type="text/ng-template" id="dialog-edit-task">
-	<designer ng-if="designer.page==0">
+	<designer ng-if="designer.page==0" ng-keydown="onDialogCtrlEnter($event, updateTask, designer.command)">
 		<header>
 			<h3>Add a new task</h3>
 		</header>
@@ -2187,7 +2187,7 @@
 
 
 <script type="text/ng-template" id="dialog-edit-variable">
-	<designer ng-if="designer.page==0">
+	<designer ng-if="designer.page==0" ng-keydown="onDialogCtrlEnter($event, updateVariable, designer.$new ? ((designer.name || designer.name == 'true' || designer.name == 'false') && designer.operand.valid) : (designer.name && designer.operand.valid))">
 		<header>
 			<h3>{{designer.$new ? 'Add a new' : 'Edit'}} variable</h3>
 		</header>
@@ -2276,7 +2276,7 @@
 
 
 <script type="text/ng-template" id="dialog-edit-global-variable">
-	<designer>
+	<designer ng-keydown="onDialogCtrlEnter($event, updateGlobalVariable, designer.name && designer.operand.valid && validateGlobalVariableName())">
 		<header>
 			<h3>{{designer.$new ? 'Add a new' : 'Edit'}} global variable</h3>
 		</header>
@@ -2338,7 +2338,7 @@
 
 
 <script type="text/ng-template" id="dialog-edit-settings">
-	<designer>
+	<designer ng-keydown="onDialogCtrlEnter($event, updateSettings, designer.name)">
 		<header>
 			<h3>Piston settings</h3>
 		</header>
