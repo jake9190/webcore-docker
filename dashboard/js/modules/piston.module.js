@@ -590,6 +590,17 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		});
 	}
 
+	var onDialogKeyDown = function(event) {
+		if (!event.ctrlKey || (event.which != 13 && event.keyCode != 13) || !ngDialog.getOpenDialogs().length) return;
+		event.preventDefault();
+		if ($scope.designer && typeof $scope.designer.ctrlEnter == 'function') {
+			$scope.$applyAsync(function() {
+				$scope.designer.ctrlEnter();
+			});
+		}
+	};
+	$window.addEventListener('keydown', onDialogKeyDown, true);
+
 	var onPistonKeyDown = function(event) {
 		if (!event.ctrlKey || (event.which != 83 && event.keyCode != 83) || $scope.mode != 'edit' || ngDialog.getOpenDialogs().length) return;
 		event.preventDefault();
@@ -599,6 +610,7 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 	};
 	$window.addEventListener('keydown', onPistonKeyDown);
 	$scope.$on('$destroy', function() {
+		$window.removeEventListener('keydown', onDialogKeyDown, true);
 		$window.removeEventListener('keydown', onPistonKeyDown);
 	});
 
@@ -1071,6 +1083,9 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 			commandDelay: $scope.piston.o.ced ? $scope.piston.o.ced : 0,
 			ignoreSslErrors: $scope.piston.o.ish ? 1 : 0
 		};
+		$scope.designer.ctrlEnter = function() {
+			if ($scope.designer.name) $scope.updateSettings();
+		};
 		window.designer = $scope.designer;
 		$scope.designer.dialog = ngDialog.open({
 			template: 'dialog-edit-settings',
@@ -1094,18 +1109,6 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		$scope.piston.o.ish = $scope.designer.ignoreSslErrors ? 1 : 0;
 		$scope.closeDialog();
 	}
-
-	$scope.onDialogCtrlEnter = function(event, submit, enabled) {
-		if (!event.ctrlKey || (event.which != 13 && event.keyCode != 13)) return;
-		event.preventDefault();
-		if (enabled && typeof submit == 'function') submit();
-	}
-
-
-
-
-
-
 
 	/* statements */
 
@@ -1646,6 +1649,11 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		$scope.designer.smode = condition.sm;
 		$scope.designer.description = condition.z;
 		window.designer = $scope.designer;
+		$scope.designer.ctrlEnter = function() {
+			if ($scope.designer.type && (($scope.designer.type != 'condition') || $scope.designer.comparison.valid)) {
+				$scope.updateCondition();
+			}
+		};
 		$scope.designer.items = [
 			{ type: 'condition', name: 'Condition', icon: 'code', cssClass: 'btn-info' },
 			{ type: 'group', name: 'Group', icon: 'code-branch', cssClass: 'btn-warning' },
@@ -2033,6 +2041,9 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		$scope.prepareParameters(task);
 		window.designer = $scope.designer;
 		window.scope = $scope;
+		$scope.designer.ctrlEnter = function() {
+			if ($scope.designer.command) $scope.updateTask();
+		};
 		$('a-ckolor-wheel').remove();
 		$scope.designer.dialog = ngDialog.open({
 			template: 'dialog-edit-task',
@@ -2135,6 +2146,10 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		window.designer = $scope.designer;
 		window.scope = $scope;
 		$scope.validateOperand($scope.designer.operand);
+		$scope.designer.ctrlEnter = function() {
+			var hasName = $scope.designer.name || $scope.designer.name == 'true' || $scope.designer.name == 'false';
+			if (hasName && $scope.designer.operand.valid) $scope.updateVariable();
+		};
 		$scope.designer.dialog = ngDialog.open({
 			template: 'dialog-edit-variable',
 			className: 'ngdialog-theme-default ngdialog-large',
@@ -2244,6 +2259,11 @@ config.controller('piston', ['$scope', '$rootScope', 'dataService', 'colorScheme
 		window.designer = $scope.designer;
 		window.scope = $scope;
 		$scope.validateOperand($scope.designer.operand);
+		$scope.designer.ctrlEnter = function() {
+			if ($scope.designer.name && $scope.designer.operand.valid && $scope.validateGlobalVariableName()) {
+				$scope.updateGlobalVariable();
+			}
+		};
 		$scope.designer.dialog = ngDialog.open({
 			template: 'dialog-edit-global-variable',
 			className: 'ngdialog-theme-default ngdialog-large',
